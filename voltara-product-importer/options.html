@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Cấu hình Voltara Product Importer</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    <div class="card shadow-lg">
+      
+      <!-- Brand Header -->
+      <header class="header">
+        <div class="logo-area">
+          <span class="logo-brand">VOLTARA</span>
+          <span class="logo-sub">PRODUCT IMPORTER</span>
+        </div>
+        <div class="badge">CHROME EXTENSION SETTINGS</div>
+      </header>
+
+      <!-- Main body -->
+      <div class="card-body">
+        
+        <div class="intro-section">
+          <h2>Cấu hình kết nối hệ thống</h2>
+          <p>Thiết lập thông tin kết nối giữa tiện ích mở rộng Chrome này và ứng dụng quản lý <strong>Voltara Product Hub</strong> của bạn.</p>
+        </div>
+
+        <!-- Connection status indicator panel -->
+        <div id="status-panel" class="status-panel status-disconnected">
+          <div class="status-header">
+            <span class="status-dot"></span>
+            <span id="status-title" class="status-title">Chưa kết nối</span>
+          </div>
+          <p id="status-desc" class="status-desc">Tiện ích chưa được liên kết với bất kỳ Voltara Product Hub nào. Vui lòng cấu hình các trường bên dưới.</p>
+        </div>
+
+        <!-- Settings Form -->
+        <form id="settings-form" class="settings-form">
+          
+          <div class="form-group">
+            <label for="hub-url" class="form-label">
+              Địa chỉ Voltara Product Hub (URL)
+              <span class="required">*</span>
+            </label>
+            <input 
+              type="url" 
+              id="hub-url" 
+              class="form-control" 
+              placeholder="Ví dụ: https://voltara-hub.run.app" 
+              required
+            >
+            <span class="form-help">Địa chỉ trang chủ của ứng dụng Voltara Product Hub (không có dấu gạch chéo ở cuối).</span>
+          </div>
+
+          <div class="form-group">
+            <label for="token" class="form-label">
+              Mã kết nối (Connection Token)
+              <span class="required">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="token" 
+              class="form-control font-mono" 
+              placeholder="VOLTARA-XXXX-XXXX" 
+              required
+            >
+            <span class="form-help">Mã kết nối an toàn được tạo từ mục <strong>Cài đặt hệ thống &gt; Tiện ích Chrome</strong> của Voltara Hub.</span>
+          </div>
+
+          <!-- Form Buttons -->
+          <div class="form-actions">
+            <button type="submit" id="btn-save" class="btn btn-primary font-bold">
+              LƯU CẤU HÌNH
+            </button>
+            <button type="button" id="btn-test" class="btn btn-secondary">
+              KIỂM TRA KẾT NỐI
+            </button>
+            <button type="button" id="btn-disconnect" class="btn btn-danger hidden">
+              XÓA KẾT NỐI
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- Quick help footer inside card -->
+      <div class="card-footer text-slate-500 text-xs">
+        <h3>Hướng dẫn lấy Mã kết nối:</h3>
+        <ol>
+          <li>Mở ứng dụng <strong>Voltara Product Hub</strong> của bạn.</li>
+          <li>Đi tới trang <strong>Cài đặt hệ thống</strong> ở menu bên trái.</li>
+          <li>Chọn thẻ <strong>Tiện ích Chrome</strong>.</li>
+          <li>Nhấp vào nút <strong>Kết nối Tiện ích</strong> để kích hoạt và hiển thị <strong>Mã kết nối</strong> của bạn.</li>
+          <li>Sao chép Địa chỉ Hub và Mã kết nối dán vào đây để hoàn thành liên kết.</li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

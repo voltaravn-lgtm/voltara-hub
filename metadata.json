@@ -1,0 +1,6 @@
+{
+  "name": "Voltara Product Hub",
+  "description": "Hệ thống quản lý sản phẩm trung tâm hiện đại dành cho thương hiệu máy móc Voltara.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

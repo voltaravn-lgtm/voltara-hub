@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Voltara Product Importer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-container">
+      <span class="logo-brand">VOLTARA</span>
+      <span class="logo-sub">PRODUCT IMPORTER</span>
+    </div>
+    <div id="status-badge" class="status-badge status-unknown">
+      <span class="status-dot"></span>
+      <span id="status-text">Đang kiểm tra trang...</span>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+    
+    <!-- State 1: Not a Shopee Product Page -->
+    <div id="panel-invalid-page" class="panel hidden">
+      <div class="alert-box warning">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p class="alert-title">Không phải trang sản phẩm Shopee</p>
+        <p class="alert-desc">Tiện ích chỉ hoạt động trên các trang chi tiết sản phẩm của Shopee Việt Nam.</p>
+      </div>
+      
+      <div class="action-list">
+        <a href="https://shopee.vn" target="_blank" class="btn btn-primary font-bold">
+          MỞ SHOPEE VIỆT NAM
+        </a>
+        <button id="btn-open-hub-invalid" class="btn btn-outline">
+          MỞ VOLTARA HUB
+        </button>
+      </div>
+    </div>
+
+    <!-- State 2: Valid Shopee Product Page -->
+    <div id="panel-valid-page" class="panel hidden">
+      <!-- Product Quick Card -->
+      <div class="product-card">
+        <div class="product-header">
+          <span class="source-tag">Shopee VN</span>
+          <span id="product-sku-tag" class="sku-tag hidden">SKU</span>
+        </div>
+        
+        <div class="product-body">
+          <div class="image-wrapper">
+            <img id="product-img" src="placeholder.png" alt="Product Thumbnail">
+            <span id="image-count-badge" class="img-count-badge">0 ảnh</span>
+          </div>
+          <div class="product-details">
+            <h2 id="product-name" class="product-title">Tên sản phẩm chưa tải...</h2>
+            <div class="price-container">
+              <span id="product-price" class="price-active">0 đ</span>
+              <span id="product-original-price" class="price-original"></span>
+            </div>
+            <div class="seller-container text-xs">
+              <span>Gian hàng:</span>
+              <strong id="product-seller-name" class="seller-name">Chưa lấy</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weight Config for Shopee Upload -->
+      <div class="weight-config" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 12px; margin-bottom: 12px;">
+        <label for="input-product-weight" style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">
+          <span>Cân nặng sản phẩm (g) để đăng Shopee:</span>
+          <span style="font-size: 10px; font-weight: normal; color: #64748b;">(Có thể chỉnh sửa)</span>
+        </label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="number" id="input-product-weight" value="500" min="10" style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px; font-weight: 700; color: #0f172a; outline: none;" />
+          <span style="font-size: 12px; font-weight: 600; color: #475569;">gam</span>
+        </div>
+      </div>
+
+      <!-- Actions Panel -->
+      <div class="action-grid">
+        <button id="btn-scrape" class="btn btn-secondary flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+          </svg>
+          LẤY DỮ LIỆU MỚI
+        </button>
+        <button id="btn-preview" class="btn btn-outline flex items-center justify-center gap-1.5" disabled>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          XEM TRƯỚC
+        </button>
+        <button id="btn-submit" class="btn btn-primary w-full flex items-center justify-center gap-1.5" disabled>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 2 11 13 22 22"></polyline>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          GỬI VỀ VOLTARA HUB
+        </button>
+      </div>
+    </div>
+
+    <!-- State 2C: Valid Facebook Post Page -->
+    <div id="panel-facebook-page" class="panel hidden">
+      <div class="product-card" style="border-left: 4px solid #1877f2; border-radius: 8px;">
+        <div class="product-header">
+          <span class="source-tag" style="background: #1877f2; color: white;">Facebook Post</span>
+          <span id="fb-post-id-tag" class="sku-tag">ID: fb-post</span>
+        </div>
+        
+        <div class="product-body" style="flex-direction: column; gap: 8px; padding: 12px; display: flex;">
+          <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+            <div style="background: #e7f3ff; color: #1877f2; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold; font-family: sans-serif; font-size: 16px;">f</div>
+            <div style="flex: 1; min-width: 0; text-align: left;">
+              <strong id="fb-page-name" class="seller-name" style="color: #0f172a; font-size: 13px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700;">Trang Facebook</strong>
+              <span id="fb-media-count" class="text-slate-500" style="font-size: 10px; display: block;">0 hình ảnh</span>
+            </div>
+          </div>
+          
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px; font-size: 11px; color: #334155; line-height: 1.4; width: 100%; box-sizing: border-box; max-height: 110px; overflow-y: auto;">
+            <p id="fb-caption-preview" style="margin: 0; white-space: pre-line; text-align: left; font-weight: normal; color: #334155;">Nội dung bài viết chưa tải...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions Panel -->
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px;">
+        <button id="btn-scrape-facebook" class="btn btn-secondary flex items-center justify-center gap-1.5" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+          </svg>
+          QUÉT LẠI BÀI VIẾT
+        </button>
+        <button id="btn-submit-facebook" class="btn btn-primary w-full flex items-center justify-center gap-1.5" style="display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background-color: #1877f2; border-color: #1877f2;">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+            <polyline points="22 2 11 13 22 22"></polyline>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          GỬI BÀI VIẾT VỀ HUB
+        </button>
+      </div>
+    </div>
+
+    <!-- State 2B: Bulk Shopee Shop / List Page -->
+    <div id="panel-bulk-page" class="panel hidden">
+      <div class="alert-box info" style="background-color: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; padding: 12px; border-radius: 6px; display: flex; gap: 8px; margin-bottom: 12px;">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px; flex-shrink: 0; color: #10b981;">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <div>
+          <p class="alert-title" style="font-weight: 700; font-size: 13px; margin: 0 0 2px 0;">Phát hiện Trang Cửa hàng / Danh mục</p>
+          <p class="alert-desc" style="font-size: 11px; margin: 0; opacity: 0.9;">Công cụ đã tìm thấy danh sách sản phẩm trên trang này. Bạn có thể lưu tất cả về Voltara Hub.</p>
+        </div>
+      </div>
+
+      <!-- Scroll reminder if low count -->
+      <div id="scroll-reminder" class="text-xs text-slate-500" style="background-color: #f1f5f9; padding: 6px 10px; border-radius: 4px; margin-bottom: 12px; border-left: 3px solid #94a3b8; line-height: 1.4;">
+        💡 <strong>Mẹo:</strong> Cuộn chuột xuống cuối trang Shopee để tải đầy đủ tất cả sản phẩm, sau đó nhấn nút "Quét lại trang" để cập nhật đầy đủ nhé!
+      </div>
+
+      <!-- Bulk list container -->
+      <div class="bulk-list-box" style="background: white; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; margin-bottom: 12px;">
+        <div class="flex justify-between items-center" style="margin-bottom: 8px; font-weight: 600; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #0f172a;">Danh sách sản phẩm (<span id="bulk-count">0</span>)</span>
+          <button id="btn-scan-again" style="background: none; border: none; color: #2563eb; cursor: pointer; font-size: 11px; font-weight: 600; text-decoration: underline; padding: 0;">Quét lại trang</button>
+        </div>
+        
+        <!-- Scrolled list of found products -->
+        <div id="bulk-products-list" class="scrollable" style="max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; border: 1px solid #f1f5f9; padding: 6px; border-radius: 4px;">
+          <!-- Items will be dynamically generated -->
+        </div>
+      </div>
+
+      <!-- Progress status if importing -->
+      <div id="bulk-progress-panel" class="hidden" style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 10px; margin-bottom: 12px;">
+        <div class="flex justify-between items-center text-xs font-bold" style="color: #1e40af; margin-bottom: 6px; display: flex; justify-content: space-between;">
+          <span>Tiến trình import hàng loạt</span>
+          <span id="bulk-progress-text">0 / 0</span>
+        </div>
+        <div style="background: #dbeafe; height: 8px; border-radius: 9999px; overflow: hidden; margin-bottom: 6px;">
+          <div id="bulk-progress-bar" style="background: #2563eb; width: 0%; height: 100%; transition: width 0.3s ease;"></div>
+        </div>
+        <p id="bulk-status-msg" style="font-size: 11px; color: #1e3a8a; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Đang chuẩn bị gửi...</p>
+      </div>
+
+      <!-- Bulk Actions Panel -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <button id="btn-submit-bulk" class="btn btn-primary w-full flex items-center justify-center gap-1.5" style="padding: 10px; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+            <polyline points="22 2 11 13 22 22"></polyline>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          GỬI TOÀN BỘ SẢN PHẨM LÊN HUB
+        </button>
+      </div>
+    </div>
+
+    <!-- State 3: Scraped Detail Preview Modal/Accordion (Slide Up) -->
+    <div id="preview-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Xem trước dữ liệu thu thập</h3>
+          <button id="btn-close-preview" class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body scrollable">
+          <div class="preview-item">
+            <span class="lbl">Tên sản phẩm</span>
+            <div id="preview-name" class="val-bold"></div>
+          </div>
+          <div class="preview-row">
+            <div>
+              <span class="lbl">Giá bán</span>
+              <div id="preview-price" class="val text-blue-600 font-bold"></div>
+            </div>
+            <div>
+              <span class="lbl">Giá gốc</span>
+              <div id="preview-original" class="val text-slate-400 line-through"></div>
+            </div>
+          </div>
+          <div class="preview-item">
+            <span class="lbl">Cửa hàng</span>
+            <div id="preview-seller" class="val font-semibold text-slate-700"></div>
+          </div>
+          <div class="preview-item">
+            <span class="lbl">Hình ảnh ({count})</span>
+            <div id="preview-images-container" class="preview-imgs"></div>
+          </div>
+          <div class="preview-item">
+            <span class="lbl">Phân loại hàng (Variants)</span>
+            <div id="preview-variants-container" class="preview-tags-list"></div>
+          </div>
+          <div class="preview-item">
+            <span class="lbl">Mô tả sản phẩm</span>
+            <div id="preview-desc" class="val-desc font-normal"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- State 4: Import feedback screen -->
+    <div id="panel-feedback" class="panel hidden">
+      <div id="feedback-box" class="feedback-card">
+        <div id="feedback-icon-container" class="feedback-icon">
+          <!-- Icon will be injected -->
+        </div>
+        <h3 id="feedback-title" class="feedback-title">Tiến trình gửi</h3>
+        <p id="feedback-desc" class="feedback-desc">Vui lòng chờ...</p>
+        
+        <div class="feedback-actions">
+          <button id="btn-feedback-retry" class="btn btn-secondary hidden">THỬ LẠI</button>
+          <button id="btn-feedback-close" class="btn btn-outline">ĐÓNG</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <button id="btn-open-options" class="footer-link flex items-center gap-1">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+      CÀI ĐẶT KẾT NỐI
+    </button>
+    <span class="footer-divider">|</span>
+    <button id="btn-open-hub-footer" class="footer-link">MỞ VOLTARA HUB</button>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

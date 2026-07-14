@@ -1,0 +1,50 @@
+{
+  "config": {
+    "isConnected": true,
+    "token": "VOLTARA-GZ55-VFZ5",
+    "extensionName": "Voltara Product Importer",
+    "lastConnectedAt": "2026-07-10T00:00:00.000Z",
+    "productsSentCount": 0
+  },
+  "products": [],
+  "facebookPosts": [],
+  "facebookOAuth": {
+    "pages": [
+      {
+        "id": "720906974785887",
+        "name": "Đồ Chơi Chất",
+        "category": "Sở thích",
+        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/326431996_582654360017026_275808128308730349_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=103&ccb=1-7&_nc_sid=f907e8&_nc_ohc=_TDjdln_zysQ7kNvwFhjruF&_nc_oc=Adql0ovx9I_4lH7ZznSQQzR_9CdNx66--EXrl5KBlpEbOsROY0mxNdlJ32uPnG6RIUgz1TwFvvwVw6u59RBlZfZK&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=bPKBFVrxeNj4Za0rNVinmg&_nc_tpa=Q5bMBQFa-8k5E0mtag0IkN9_irM7MeI9NbmK4vg3szoqQ4AEdtuybLpXQW520NgSLGKuJSy5AeRRASPcCg&oh=00_AQDwkt7TsC6X2er-d0EAalT9YbrhKn0fyyJojdQE2iu3BA&oe=6A5BA1E8",
+        "status": "connected",
+        "encryptedAccessToken": "3aGbPBuK3AuFX_nW.kXDpTN9axts8ESZUzuK9Gg.VlKZqCFfqudcM0jdumuRfgdb17R4bgAt63Rg_YrXKodHj_Lv6bfEzWZbm6ARvlqL3YsLgGHC8ava3y8Oevd63TL_SoP8ROQv90NpC1qDyLrdSTh86Hd11Yr2HCM5AAhjLPagij3opsB1Hw8AnS5UPcSAzl8kHTpOknyJ2I2DDCggKAqlKf-mbP-tjg0qCBW84OUXJJXvK-nW50phbw2WmTZAj_xc8_rt0bO67o20clYSNSPBsYikpVs794G3AIlfLZ9GTeD7IiuEAfR03R1uNx9f1sfPI8N1i8KmcWf4DdLFxw",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE"
+        ],
+        "connectedAt": "2026-07-14T05:19:30.363Z"
+      },
+      {
+        "id": "1826362154251230",
+        "name": "Vua Ô Tô",
+        "category": "Ô tô, máy bay, tàu",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/358697877_291425640060732_4212679822821282319_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=110&ccb=1-7&_nc_sid=f907e8&_nc_ohc=nF9HN2HnQx8Q7kNvwE5zZga&_nc_oc=AdpG1YksfDhLO1LzF3bDnvXcq1uzyK49M9zxqAbPrNEgu89WCofapBJV2jsQG0BOGI3pVqPp8b3tSNIO3WDzzmxv&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=bPKBFVrxeNj4Za0rNVinmg&_nc_tpa=Q5bMBQFZ4-xBk-nwuVvX4z6siqeeQSLC_S4I6xY5fi9qXnGgwefYCue3p0Fz9i2w8YZqa-FhWStqd8h-Ig&oh=00_AQCgh6Tr2eyTzqj3ixR-ghfoktM2csZgkftBUElNIrKTiQ&oe=6A5BAC76",
+        "status": "connected",
+        "encryptedAccessToken": "1jBVWCr7UBEyzZzG.2nxo810QEfF053OH5_vFUg.SSMj7vF84ojYiSxON6svyv4GD159w4QuaTODkyW3eUNTnIaTXP1Nrq9TQd1dMSaCVEq-oJz4hdo068UVovdYvGuZGEahjar8G9e8I2DUMZh_UW-ODm9BeUJNINKPYAD9uQ5PbKq7x2bXQcbX9RKzPVGZLn1mSBkeegEnarFHysGQl7jBm5A-T6KDZLfklUtj2VKCigXBpXZWZg0KzQuLbbxan_PU3YtCOjXAK8-IhenXY14mPm13yB_OE36TjiwiPVUrBbvMyAgQTyM_zRog_Qwrifsf9Q3uPASM",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE"
+        ],
+        "connectedAt": "2026-07-14T05:19:30.363Z"
+      }
+    ],
+    "encryptedUserToken": "7p-toaY8Eo9WaXAH.v4P1SHq6uHf1cLP9XpKkOA.uaORUOKIL7t3s8VDp0RpinvpL_GTBi8I1KgZMMGAZfMyTekVv-5-BjhqjQKkXzR4EqFb2tvi2v2k85oXCx6EoU87AYSl14MIZ8ibwXuaII44HC2V6Q2Y8AGwPMmDRysDuKiLGa5_XWLWG1NnRUbiv2Quj1a1MQ26e9-zd547R8qvry0le1xl8nQ7_wlO-jETeWyL92pU4ZJ_ogW5avLekVjCO1M4A6vfzuGUiDhwZm2P4Hnaoamc1lxO3MUBrmn-GQi1kV3xgErMam2Q06384HyXh3u1"
+  }
+}
