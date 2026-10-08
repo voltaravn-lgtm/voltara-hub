@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { productService } from './services/productService';
 import { Product, Category } from './types';
 import { ToastContainer, ToastMessage } from './components/Toast';
@@ -107,14 +107,14 @@ export default function App() {
   // --- TOAST NOTIFICATIONS STATE ---
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const addToast = (message: string, type: 'success' | 'error' | 'info' | 'warning' = 'success') => {
+  const addToast = useCallback((message: string, type: 'success' | 'error' | 'info' | 'warning' = 'success') => {
     const id = Math.random().toString(36).substr(2, 9);
-    setToasts((prev) => [...prev, { id, message, type }]);
-  };
+    setToasts((prev) => [...prev, { id, message, type }].slice(-4));
+  }, []);
 
-  const removeToast = (id: string) => {
+  const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
+  }, []);
 
   // --- CONFIRM MODAL STATE ---
   const [confirmModal, setConfirmModal] = useState<{
@@ -765,4 +765,3 @@ export default function App() {
     </div>
   );
 }
-

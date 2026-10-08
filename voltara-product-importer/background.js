@@ -57,6 +57,20 @@ chrome.webRequest.onHeadersReceived.addListener(
 );
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === "GET_MANUAL_PUBLISH_JOB") {
+    handleGetManualPublishJob(request.jobId)
+      .then(sendResponse)
+      .catch(err => sendResponse({ success: false, error: err.message || "Không đọc được gói đăng thủ công." }));
+    return true;
+  }
+
+  if (request.type === "DOWNLOAD_MANUAL_MEDIA") {
+    handleDownloadManualMedia(request.media)
+      .then(sendResponse)
+      .catch(err => sendResponse({ success: false, error: err.message || "Không tải được media." }));
+    return true;
+  }
+
   if (request.type === "GET_FACEBOOK_VIDEO_URLS") {
     const tabId = sender.tab?.id;
     if (!tabId) {
@@ -211,6 +225,42 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 });
+
+async function handleGetManualPublishJob(jobId) {
+  if (!jobId || !/^[a-zA-Z0-9_-]{12,80}$/.test(jobId)) {
+    return { success: false, error: "Mã gói đăng thủ công không hợp lệ." };
+  }
+  const settings = await chrome.storage.local.get(["hubUrl", "token"]);
+  const hubUrl = String(settings.hubUrl || "").trim().replace(/\/$/, "");
+  const token = String(settings.token || "").trim();
+  if (!hubUrl || !token) {
+    return { success: false, error: "Tiện ích chưa được kết nối với Voltara Hub." };
+  }
+  const response = await fetch(`${hubUrl}/api/extensions/facebook/manual-publish/${encodeURIComponent(jobId)}`, {
+    headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
+  });
+  const data = await response.json().catch(() => ({ success: false, error: `Máy chủ trả về HTTP ${response.status}` }));
+  return response.ok ? data : { success: false, error: data.error || `Máy chủ trả về HTTP ${response.status}` };
+}
+
+async function handleDownloadManualMedia(media) {
+  const items = Array.isArray(media) ? media.slice(0, 20) : [];
+  if (!items.length) return { success: false, error: "Bài viết không có media để tải." };
+  const ids = [];
+  for (let index = 0; index < items.length; index += 1) {
+    const item = items[index];
+    if (!item?.url || !/^https?:\/\//i.test(item.url)) continue;
+    const extension = item.type === "video" ? "mp4" : "jpg";
+    const id = await chrome.downloads.download({
+      url: item.url,
+      filename: `Voltara-Facebook/media-${index + 1}.${extension}`,
+      saveAs: false,
+      conflictAction: "uniquify"
+    });
+    ids.push(id);
+  }
+  return { success: ids.length > 0, count: ids.length };
+}
 
 async function extractFacebookVideoUrlsInMainWorld(tabId, notBefore = 0) {
   const results = await chrome.scripting.executeScript({

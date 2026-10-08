@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { FacebookPost, FacebookPage } from '../../types/facebookTypes';
 import { FacebookPageSelector } from './FacebookPageSelector';
-import { X, Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, Send, CheckCircle2, AlertCircle, ExternalLink } from 'lucide-react';
 
 interface FacebookPublishDialogProps {
   post: FacebookPost;
   pages: FacebookPage[];
   onClose: () => void;
   onPublish: (post: FacebookPost, pageIds: string[]) => Promise<{ success: boolean; error?: string }>;
+  onManualPublish: (post: FacebookPost, pageId: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 export const FacebookPublishDialog: React.FC<FacebookPublishDialogProps> = ({
@@ -15,6 +16,7 @@ export const FacebookPublishDialog: React.FC<FacebookPublishDialogProps> = ({
   pages,
   onClose,
   onPublish,
+  onManualPublish,
 }) => {
   const [selectedPageIds, setSelectedPageIds] = useState<string[]>(post.targetPages || []);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,6 +34,22 @@ export const FacebookPublishDialog: React.FC<FacebookPublishDialogProps> = ({
       setResult(res);
     } catch (err: any) {
       setResult({ success: false, error: err.message || 'Lỗi không xác định.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleManualSubmit = async () => {
+    if (selectedPageIds.length !== 1) {
+      alert('Vui lòng chọn đúng một Fanpage để mở trình đăng thủ công.');
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const res = await onManualPublish(post, selectedPageIds[0]);
+      if (!res.success) setResult(res);
+    } catch (err: any) {
+      setResult({ success: false, error: err.message || 'Không mở được Facebook.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -114,6 +132,17 @@ export const FacebookPublishDialog: React.FC<FacebookPublishDialogProps> = ({
                 id="btn-cancel-publish"
               >
                 Hủy bỏ
+              </button>
+              <button
+                type="button"
+                onClick={handleManualSubmit}
+                disabled={isSubmitting || selectedPageIds.length !== 1}
+                className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-blue-700 bg-white border border-blue-200 hover:bg-blue-50 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                id="btn-manual-publish"
+                title="Tiện ích điền bài, bạn kiểm tra và tự bấm Đăng"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Mở Facebook &amp; điền bài</span>
               </button>
               <button
                 type="button"

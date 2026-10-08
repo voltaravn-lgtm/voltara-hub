@@ -8,6 +8,9 @@ interface FacebookPostCardProps {
   onEdit: (post: FacebookPost) => void;
   onDelete: (id: string) => void;
   onPublish: (post: FacebookPost) => void;
+  selected?: boolean;
+  selectionOrder?: number;
+  onSelectionChange?: (id: string, selected: boolean) => void;
 }
 
 export const FacebookPostCard: React.FC<FacebookPostCardProps> = ({
@@ -15,10 +18,13 @@ export const FacebookPostCard: React.FC<FacebookPostCardProps> = ({
   onEdit,
   onDelete,
   onPublish,
+  selected = false,
+  selectionOrder = 0,
+  onSelectionChange,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const isDirectVideoUrl = (url: string) =>
-    /^https?:\/\//i.test(url) &&
+    (/^https?:\/\//i.test(url) || /^\/api\/facebook\/media\//i.test(url)) &&
     !/(?:facebook\.com|fb\.watch)\/(?:reel|reels|posts|videos)?/i.test(url);
 
   // Status Badge Helper
@@ -54,10 +60,19 @@ export const FacebookPostCard: React.FC<FacebookPostCardProps> = ({
   const displayText = isExpanded ? captionText : (isLongText ? captionText.slice(0, 200) + '...' : captionText);
 
   return (
-    <div id={`fb-card-${post.id}`} className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between">
+    <div id={`fb-card-${post.id}`} className={`bg-white border rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col justify-between ${selected ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-slate-200'}`}>
       {/* Post Header */}
       <div className="p-4 border-b border-slate-100 flex justify-between items-start gap-2">
         <div className="flex items-center gap-3">
+          {onSelectionChange && (
+            <input
+              type="checkbox"
+              checked={selected}
+              onChange={(event) => onSelectionChange(post.id, event.target.checked)}
+              className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+              aria-label={`Chọn bài ${post.pageName || post.id}`}
+            />
+          )}
           <div className="w-10 h-10 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center font-bold text-blue-700 text-sm">
             {post.pageName ? post.pageName.charAt(0) : 'FB'}
           </div>
@@ -71,7 +86,17 @@ export const FacebookPostCard: React.FC<FacebookPostCardProps> = ({
             </div>
           </div>
         </div>
-        {renderStatusBadge()}
+        <div className="flex items-center gap-2">
+          {selected && selectionOrder > 0 && (
+            <span
+              className="min-w-6 h-6 px-1.5 rounded-full bg-blue-600 text-white text-[11px] font-extrabold flex items-center justify-center"
+              title={`Thứ tự đăng: ${selectionOrder}`}
+            >
+              #{selectionOrder}
+            </span>
+          )}
+          {renderStatusBadge()}
+        </div>
       </div>
 
       {/* Post Body (Caption & Media Preview) */}

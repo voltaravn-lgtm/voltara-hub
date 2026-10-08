@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { FacebookPost, FacebookPage } from '../types/facebookTypes';
 import { facebookImportService } from '../services/facebookImportService';
 import { facebookPageService } from '../services/facebookPageService';
 import { facebookPublishingService } from '../services/facebookPublishingService';
 import { FacebookPostCard } from '../components/facebook/FacebookPostCard';
 import { FacebookPublishDialog } from '../components/facebook/FacebookPublishDialog';
-import { Search, Filter, RefreshCw, FileSpreadsheet, PlusCircle, Facebook } from 'lucide-react';
+import { Search, Filter, RefreshCw, FileSpreadsheet, PlusCircle, Facebook, Send, CheckSquare } from 'lucide-react';
 
 interface FacebookPostsPageProps {
   onNavigateToEditor: (post: FacebookPost) => void;
@@ -21,6 +22,11 @@ export const FacebookPostsPage: React.FC<FacebookPostsPageProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [publishingPost, setPublishingPost] = useState<FacebookPost | null>(null);
+  const [selectedPostIds, setSelectedPostIds] = useState<string[]>([]);
+  const [bulkPageId, setBulkPageId] = useState('');
+  const [bulkStarting, setBulkStarting] = useState(false);
+  const [showFloatingBulkBar, setShowFloatingBulkBar] = useState(false);
+  const bulkBarAnchorRef = useRef<HTMLDivElement>(null);
 
   const loadData = async () => {
     // Sync any pending imports from the Extension queue
@@ -53,6 +59,31 @@ export const FacebookPostsPage: React.FC<FacebookPostsPageProps> = ({
     loadData();
   }, []);
 
+  useEffect(() => {
+    const anchor = bulkBarAnchorRef.current;
+    if (!anchor) return;
+
+    let frameId = 0;
+    const updateFloatingBar = () => {
+      cancelAnimationFrame(frameId);
+      frameId = requestAnimationFrame(() => {
+        const anchorRect = anchor.getBoundingClientRect();
+        setShowFloatingBulkBar(anchorRect.top < 72);
+      });
+    };
+
+    // Capture scroll events from any nested scrolling container used by the app/browser.
+    window.addEventListener('scroll', updateFloatingBar, { passive: true, capture: true });
+    window.addEventListener('resize', updateFloatingBar);
+    updateFloatingBar();
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('scroll', updateFloatingBar, true);
+      window.removeEventListener('resize', updateFloatingBar);
+    };
+  }, []);
+
   const handleDelete = (id: string) => {
     if (window.confirm('Bạn có chắc chắn muốn xóa bài viết Facebook đã copy này?')) {
       facebookImportService.deletePost(id);
@@ -81,6 +112,51 @@ export const FacebookPostsPage: React.FC<FacebookPostsPageProps> = ({
     return res;
   };
 
+  const handleManualPublish = async (post: FacebookPost, pageId: string) => {
+    const page = pages.find(item => item.id === pageId);
+    if (!page) return { success: false, error: 'Không tìm thấy Fanpage đã chọn.' };
+    const res = await facebookPublishingService.prepareManualPost(post, page);
+    if (res.success) {
+      addToast('Đã mở Facebook. Dùng bảng Voltara để điền bài rồi tự bấm Đăng.', 'info');
+      setPublishingPost(null);
+    } else {
+      addToast(res.error || 'Không mở được trình đăng Facebook.', 'error');
+    }
+    return res;
+  };
+
+  const handlePostSelection = (id: string, selected: boolean) => {
+    setSelectedPostIds(current => selected
+      ? Array.from(new Set([...current, id]))
+      : current.filter(item => item !== id));
+  };
+
+  const handleBulkAutoPublish = async () => {
+    const postsById = new Map(posts.map(post => [post.id, post]));
+    const selectedPosts = selectedPostIds
+      .map(id => postsById.get(id))
+      .filter((post): post is FacebookPost => Boolean(post));
+    const page = pages.find(item => item.id === bulkPageId && item.status === 'connected');
+    if (!selectedPosts.length) {
+      addToast('Vui lòng chọn ít nhất một bài viết.', 'warning');
+      return;
+    }
+    if (!page) {
+      addToast('Vui lòng chọn Fanpage đích.', 'warning');
+      return;
+    }
+    if (!window.confirm(`Tiện ích sẽ tự động đăng tuần tự ${selectedPosts.length} bài lên Fanpage “${page.name}”. Bạn muốn tiếp tục?`)) return;
+
+    setBulkStarting(true);
+    const result = await facebookPublishingService.prepareManualBatch(selectedPosts, page);
+    setBulkStarting(false);
+    if (result.success) {
+      addToast(`Đã mở hàng đợi ${result.count || selectedPosts.length} bài. Không đóng tab Facebook cho đến khi hoàn tất.`, 'success');
+    } else {
+      addToast(result.error || 'Không khởi động được hàng đợi đăng bài.', 'error');
+    }
+  };
+
   // Filter and search logic
   const filteredPosts = posts.filter((post) => {
     const caption = (post.editedCaption || post.originalCaption || '').toLowerCase();
@@ -92,6 +168,8 @@ export const FacebookPostsPage: React.FC<FacebookPostsPageProps> = ({
     
     return matchesSearch && matchesStatus;
   });
+  const connectedPages = pages.filter(page => page.status === 'connected');
+  const allFilteredSelected = filteredPosts.length > 0 && filteredPosts.every(post => selectedPostIds.includes(post.id));
 
   return (
     <div className="space-y-6">
@@ -175,6 +253,99 @@ export const FacebookPostsPage: React.FC<FacebookPostsPageProps> = ({
         </div>
       </div>
 
+      {/* Bulk sequential publishing */}
+      <div ref={bulkBarAnchorRef} className="min-h-[76px]">
+        <div className={showFloatingBulkBar
+          ? 'hidden'
+          : ''}
+        >
+          <div className={showFloatingBulkBar ? 'max-w-7xl mx-auto pointer-events-auto' : ''}>
+            <div className={`bg-blue-50/95 backdrop-blur-md border border-blue-200 rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center gap-3 transition-shadow supports-[backdrop-filter]:bg-blue-50/85 ${showFloatingBulkBar ? 'shadow-xl ring-1 ring-blue-200/60' : 'shadow-sm'}`}>
+        <button
+          type="button"
+          onClick={() => setSelectedPostIds(allFilteredSelected
+            ? selectedPostIds.filter(id => !filteredPosts.some(post => post.id === id))
+            : Array.from(new Set([...selectedPostIds, ...filteredPosts.map(post => post.id)])))}
+          className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-blue-200 bg-white text-blue-700 text-xs font-bold hover:bg-blue-50"
+        >
+          <CheckSquare className="w-4 h-4" />
+          {allFilteredSelected ? 'Bỏ chọn danh sách đang xem' : 'Chọn tất cả đang xem'}
+        </button>
+
+        <div className="text-xs font-bold text-slate-700 whitespace-nowrap">
+          Đã chọn <span className="text-blue-700 text-sm">{selectedPostIds.length}</span> bài
+        </div>
+
+        <select
+          value={bulkPageId}
+          onChange={event => setBulkPageId(event.target.value)}
+          className="flex-1 min-w-0 bg-white border border-blue-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-blue-500"
+        >
+          <option value="">Chọn Fanpage cần đăng...</option>
+          {connectedPages.map(page => (
+            <option key={page.id} value={page.id}>{page.name}</option>
+          ))}
+        </select>
+
+        <button
+          type="button"
+          onClick={handleBulkAutoPublish}
+          disabled={bulkStarting || selectedPostIds.length === 0 || !bulkPageId}
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-extrabold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+        >
+          <Send className="w-4 h-4" />
+          {bulkStarting ? 'Đang tạo hàng đợi...' : 'Tự động đăng tuần tự'}
+        </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {showFloatingBulkBar && createPortal(
+        <div className="fixed top-[72px] left-0 md:left-64 right-0 z-[100] px-4 sm:px-6 lg:px-8 pointer-events-none">
+          <div className="max-w-7xl mx-auto pointer-events-auto">
+            <div className="bg-blue-50/95 backdrop-blur-md border border-blue-300 rounded-2xl p-4 flex flex-col lg:flex-row lg:items-center gap-3 shadow-2xl ring-1 ring-blue-300/70">
+              <button
+                type="button"
+                onClick={() => setSelectedPostIds(allFilteredSelected
+                  ? selectedPostIds.filter(id => !filteredPosts.some(post => post.id === id))
+                  : Array.from(new Set([...selectedPostIds, ...filteredPosts.map(post => post.id)])))}
+                className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-blue-200 bg-white text-blue-700 text-xs font-bold hover:bg-blue-50"
+              >
+                <CheckSquare className="w-4 h-4" />
+                {allFilteredSelected ? 'Bỏ chọn danh sách đang xem' : 'Chọn tất cả đang xem'}
+              </button>
+
+              <div className="text-xs font-bold text-slate-700 whitespace-nowrap">
+                Đã chọn <span className="text-blue-700 text-sm">{selectedPostIds.length}</span> bài
+              </div>
+
+              <select
+                value={bulkPageId}
+                onChange={event => setBulkPageId(event.target.value)}
+                className="flex-1 min-w-0 bg-white border border-blue-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-blue-500"
+              >
+                <option value="">Chọn Fanpage cần đăng...</option>
+                {connectedPages.map(page => (
+                  <option key={page.id} value={page.id}>{page.name}</option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                onClick={handleBulkAutoPublish}
+                disabled={bulkStarting || selectedPostIds.length === 0 || !bulkPageId}
+                className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-extrabold hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              >
+                <Send className="w-4 h-4" />
+                {bulkStarting ? 'Đang tạo hàng đợi...' : 'Tự động đăng tuần tự'}
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body,
+      )}
+
       {/* Posts Grid List */}
       {filteredPosts.length === 0 ? (
         <div className="bg-white border border-slate-150 rounded-2xl py-16 text-center space-y-3">
@@ -193,6 +364,9 @@ export const FacebookPostsPage: React.FC<FacebookPostsPageProps> = ({
               onEdit={onNavigateToEditor}
               onDelete={handleDelete}
               onPublish={handlePublishClick}
+              selected={selectedPostIds.includes(post.id)}
+              selectionOrder={selectedPostIds.indexOf(post.id) + 1}
+              onSelectionChange={handlePostSelection}
             />
           ))}
         </div>
@@ -205,6 +379,7 @@ export const FacebookPostsPage: React.FC<FacebookPostsPageProps> = ({
           pages={pages}
           onClose={() => setPublishingPost(null)}
           onPublish={handlePublishSubmit}
+          onManualPublish={handleManualPublish}
         />
       )}
     </div>

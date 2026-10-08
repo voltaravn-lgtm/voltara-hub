@@ -2418,6 +2418,7 @@ function initVoltaraFacebookInlineTools() {
   const observer = new MutationObserver(() => injectVoltaraFacebookButtons(setStatus));
   observer.observe(document.body, { childList: true, subtree: true });
   resumeFacebookPostQueueIfNeeded(setStatus);
+  initVoltaraManualPublisher().catch(error => console.warn("Voltara manual publisher init failed:", error));
 }
 
 function injectVoltaraFacebookButtons(setStatus) {
@@ -2488,16 +2489,24 @@ function getFacebookBatchPostKey(postEl) {
   const selectors = [
     'a[href*="/posts/"]',
     'a[href*="story_fbid="]',
+    'a[href*="fbid="]',
     'a[href*="/permalink/"]',
+    'a[href*="/permalink.php"]',
     'a[href*="/reel/"]',
     'a[href*="/videos/"]',
-    'a[href*="fbid="]'
+    'a[href*="/watch/"]',
+    'a[href*="/share/p/"]',
+    'a[href*="/share/r/"]',
+    'a[href*="/share/v/"]'
   ];
   const anchor = selectors.map(selector => postEl.querySelector(selector)).find(Boolean);
   if (anchor?.href) {
     try {
       const url = new URL(anchor.href, window.location.origin);
-      const storyId = url.searchParams.get("story_fbid") || url.searchParams.get("fbid") || "";
+      const storyId = url.searchParams.get("story_fbid") ||
+        url.searchParams.get("fbid") ||
+        url.searchParams.get("v") ||
+        "";
       return `${url.pathname.replace(/\/$/, "")}${storyId ? `?id=${storyId}` : ""}`;
     } catch (_) {
       return anchor.href.split("#")[0];
@@ -2533,9 +2542,15 @@ function getFacebookPostUrlForQueue(postEl) {
   const selectors = [
     'a[href*="/posts/"]',
     'a[href*="story_fbid="]',
+    'a[href*="fbid="]',
     'a[href*="/permalink/"]',
+    'a[href*="/permalink.php"]',
     'a[href*="/reel/"]',
-    'a[href*="/videos/"]'
+    'a[href*="/videos/"]',
+    'a[href*="/watch/"]',
+    'a[href*="/share/p/"]',
+    'a[href*="/share/r/"]',
+    'a[href*="/share/v/"]'
   ];
   const anchor = selectors.map(selector => postEl.querySelector(selector)).find(Boolean);
   if (!anchor?.href) return "";
@@ -2568,19 +2583,67 @@ function clearFacebookPostQueue() {
 
 function getFacebookPostIdentity(url) {
   if (!url) return "";
+  try {
+    const parsed = new URL(url, window.location.origin);
+    const queryId = parsed.searchParams.get("story_fbid") ||
+      parsed.searchParams.get("fbid") ||
+      parsed.searchParams.get("v");
+    if (queryId) return queryId;
+  } catch (_) {
+    // Fall through to path-based matching for malformed Facebook URLs.
+  }
   const patterns = [
     /\/posts\/(pfbid[A-Za-z0-9]+)/i,
     /\/posts\/(\d+)/i,
-    /story_fbid=(\d+)/i,
     /\/reel\/([A-Za-z0-9_-]+)/i,
     /\/videos\/(\d+)/i,
-    /\/permalink\/(\d+)/i
+    /\/permalink\/(\d+)/i,
+    /\/share\/(?:p|r|v)\/([A-Za-z0-9_-]+)/i,
+    /\/photos\/[^/]+\/([A-Za-z0-9_-]+)/i
   ];
   for (const pattern of patterns) {
     const match = url.match(pattern);
     if (match?.[1]) return match[1];
   }
   return "";
+}
+
+function getFacebookQueueUrlKey(url) {
+  if (!url) return "";
+  try {
+    const parsed = new URL(url, window.location.origin);
+    const pathname = parsed.pathname.replace(/\/+$/, "").toLowerCase();
+    const params = ["story_fbid", "fbid", "v"]
+      .map(key => `${key}=${parsed.searchParams.get(key) || ""}`)
+      .filter(value => !value.endsWith("="))
+      .join("&");
+    return `${pathname}${params ? `?${params}` : ""}`;
+  } catch (_) {
+    return String(url).split("#")[0].replace(/\/+$/, "").toLowerCase();
+  }
+}
+
+function isFacebookQueueItemOpen(expectedUrl, currentUrl) {
+  const expectedId = getFacebookPostIdentity(expectedUrl);
+  const currentId = getFacebookPostIdentity(currentUrl);
+  if (expectedId && currentId) {
+    if (expectedId === currentId) return true;
+    // /share/... uses a share token which Facebook may replace with the real
+    // post ID after navigation. A loaded detail page is the intended target.
+    try {
+      const expectedPath = new URL(expectedUrl, window.location.origin).pathname;
+      if (/\/share\/(?:p|r|v)\//i.test(expectedPath)) {
+        return !!(
+          window.VoltaraFacebookParser?.detector?.isPostDetailPage?.() ||
+          window.VoltaraFacebookParser?.detector?.isReelPage?.()
+        );
+      }
+    } catch (_) {
+      // Continue with the normalized URL comparison below.
+    }
+    return false;
+  }
+  return getFacebookQueueUrlKey(expectedUrl) === getFacebookQueueUrlKey(currentUrl);
 }
 
 async function prepareFacebookVideoForQueue() {
@@ -2615,9 +2678,7 @@ async function resumeFacebookPostQueueIfNeeded(setStatus) {
     return;
   }
 
-  const expectedId = getFacebookPostIdentity(current.url);
-  const currentId = getFacebookPostIdentity(window.location.href);
-  if (!expectedId || currentId !== expectedId) {
+  if (!isFacebookQueueItemOpen(current.url, window.location.href)) {
     queue.openedAt = Date.now();
     await setFacebookPostQueue(queue);
     setStatus?.(`Đang mở bài ${queue.index + 1}/${queue.items.length}...`);
@@ -2720,4 +2781,324 @@ async function runFbBatchCopy(setStatus, maxPosts = 20) {
   setStatus(`Đã tìm ${queue.items.length} bài. Bắt đầu mở từng bài để copy chính xác...`);
   await new Promise(resolve => setTimeout(resolve, 700));
   window.location.href = queue.items[0].url;
+}
+
+function sendVoltaraRuntimeMessage(message) {
+  return new Promise((resolve, reject) => {
+    try {
+      chrome.runtime.sendMessage(message, response => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message || "Tiện ích đã được cập nhật. Hãy tải lại trang Facebook."));
+          return;
+        }
+        resolve(response || { success: false });
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+const waitVoltara = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+function findFacebookButtonByText(patterns, root = document) {
+  const nodes = root.querySelectorAll("[role='button'], button");
+  return Array.from(nodes).find(node => {
+    const text = String(node.innerText || node.getAttribute("aria-label") || "").trim().toLowerCase();
+    return text && patterns.some(pattern => text.includes(pattern));
+  }) || null;
+}
+
+async function openFacebookComposer() {
+  const existing = document.querySelector("[role='dialog'] [contenteditable='true'][role='textbox'], [role='dialog'] [contenteditable='true']");
+  if (existing) return existing;
+  const trigger = findFacebookButtonByText([
+    "bạn đang nghĩ gì", "tạo bài viết", "viết gì đó", "what's on your mind", "create post", "write something"
+  ]);
+  if (!trigger) throw new Error("Không tìm thấy nút tạo bài viết. Hãy tự mở khung Tạo bài viết rồi bấm Điền caption.");
+  trigger.click();
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    await waitVoltara(250);
+    const editor = document.querySelector("[role='dialog'] [contenteditable='true'][role='textbox'], [role='dialog'] [contenteditable='true']");
+    if (editor) return editor;
+  }
+  throw new Error("Facebook chưa mở khung soạn bài. Hãy mở thủ công rồi thử lại.");
+}
+
+async function fillFacebookCaption(caption) {
+  const editor = await openFacebookComposer();
+  const targetText = String(caption || "")
+    .replace(/\s*(?:Ẩn bớt|Ẩn bài|See less|Hide post)\s*$/gimu, "")
+    .trim();
+  const normalize = value => String(value || "").replace(/\s+/g, " ").trim();
+  const currentText = normalize(editor.innerText || editor.textContent);
+  const normalizedTarget = normalize(targetText);
+  if (!normalizedTarget) return { changed: false };
+  if (currentText === normalizedTarget || currentText.includes(normalizedTarget)) {
+    return { changed: false };
+  }
+
+  // Facebook's Lexical editor can ignore synthetic deletion while still
+  // accepting insertText, which appends a second caption. Never insert into a
+  // non-empty composer: copy the clean caption and let the user replace it.
+  if (currentText) {
+    await copyManualCaption(targetText);
+    throw new Error("Ô soạn đã có nội dung nên tiện ích không chèn nối. Caption sạch đã được copy; hãy bấm Ctrl+A rồi Ctrl+V trong ô soạn.");
+  }
+
+  editor.focus();
+  // In the former duplicate path, this was the second (correctly formatted)
+  // insertion handled by Facebook Lexical. Use only that path: the browser
+  // insertText path was the flattened first copy.
+  editor.dispatchEvent(new InputEvent("input", {
+    bubbles: true,
+    inputType: "insertText",
+    data: targetText
+  }));
+
+  await waitVoltara(350);
+  const insertedText = normalize(editor.innerText || editor.textContent);
+  if (!insertedText || !insertedText.includes(normalizedTarget)) {
+    await copyManualCaption(targetText);
+    throw new Error("Facebook chưa nhận caption tự động. Caption đã được copy; hãy bấm Ctrl+V trong ô soạn.");
+  }
+  return { changed: true };
+}
+
+function guessManualMediaName(item, index, contentType) {
+  const isVideo = item.type === "video" || String(contentType).startsWith("video/");
+  return `voltara-facebook-${index + 1}.${isVideo ? "mp4" : "jpg"}`;
+}
+
+async function attachFacebookMedia(media) {
+  if (!Array.isArray(media) || !media.length) throw new Error("Bài này không có ảnh/video.");
+  await openFacebookComposer();
+  let input = document.querySelector("[role='dialog'] input[type='file']");
+  if (!input) {
+    const dialog = document.querySelector("[role='dialog']") || document;
+    findFacebookButtonByText(["ảnh/video", "photo/video", "thêm ảnh", "add photos"], dialog)?.click();
+    await waitVoltara(600);
+    input = document.querySelector("[role='dialog'] input[type='file']");
+  }
+  if (!input) throw new Error("Facebook không cho tiện ích truy cập ô chọn file. Hãy dùng nút Tải media rồi chọn file thủ công.");
+
+  const transfer = new DataTransfer();
+  for (let index = 0; index < media.length; index += 1) {
+    const item = media[index];
+    const response = await fetch(item.url, { credentials: "omit" });
+    if (!response.ok) throw new Error(`Không tải được media ${index + 1} (HTTP ${response.status}).`);
+    const blob = await response.blob();
+    const contentType = blob.type || (item.type === "video" ? "video/mp4" : "image/jpeg");
+    transfer.items.add(new File([blob], guessManualMediaName(item, index, contentType), { type: contentType }));
+  }
+  input.files = transfer.files;
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+  await waitVoltara(1000);
+  return transfer.files.length;
+}
+
+function findReadyFacebookPublishAction() {
+  const nextLabels = ["tiếp", "tiếp tục", "next", "continue"];
+  const publishLabels = ["đăng", "đăng ngay", "post", "publish"];
+  const matches = Array.from(document.querySelectorAll("button, [role='button']")).map(element => {
+    if (element.closest("#voltara-manual-publisher")) return false;
+    const values = [element.innerText, element.textContent, element.getAttribute("aria-label")]
+      .map(value => String(value || "").replace(/\s+/g, " ").trim().toLowerCase())
+      .filter(Boolean);
+    const disabled = element.disabled || element.getAttribute("aria-disabled") === "true";
+    const rect = element.getBoundingClientRect();
+    const style = window.getComputedStyle(element);
+    const visible = rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden";
+    if (disabled || !visible) return null;
+    if (values.some(value => publishLabels.includes(value))) return { button: element, action: "publish" };
+    if (values.some(value => nextLabels.includes(value))) return { button: element, action: "next" };
+    return null;
+  }).filter(Boolean);
+  // Facebook appends the active modal after older hidden dialog layers.
+  return matches.length ? matches[matches.length - 1] : null;
+}
+
+async function waitForFacebookPublishAction(timeoutMs) {
+  const expiresAt = Date.now() + timeoutMs;
+  while (Date.now() < expiresAt) {
+    const result = findReadyFacebookPublishAction();
+    if (result) return result;
+    await waitVoltara(400);
+  }
+  return null;
+}
+
+async function continueAndPublishFacebookPost() {
+  for (let step = 0; step < 5; step += 1) {
+    const result = await waitForFacebookPublishAction(step === 0 ? 60000 : 30000);
+    if (!result) throw new Error("Facebook chưa tải xong media hoặc không tìm thấy nút Tiếp/Đăng đang hiển thị.");
+    result.button.click();
+    if (result.action === "publish") {
+      await waitVoltara(700);
+      return true;
+    }
+    // Video/Reels may have multiple consecutive editing and settings steps.
+    await waitVoltara(1200);
+  }
+  throw new Error("Facebook có quá nhiều bước xác nhận; tiện ích đã dừng trước khi đăng.");
+}
+
+async function copyManualCaption(caption) {
+  try {
+    await navigator.clipboard.writeText(caption || "");
+  } catch {
+    const textarea = document.createElement("textarea");
+    textarea.value = caption || "";
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+  }
+}
+
+async function initVoltaraManualPublisher() {
+  if (window.__voltaraManualPublisherInstalled) return;
+  const params = new URLSearchParams(window.location.search);
+  const jobId = params.get("voltara_manual_job");
+  if (!jobId) return;
+  window.__voltaraManualPublisherInstalled = true;
+
+  const response = await sendVoltaraRuntimeMessage({ type: "GET_MANUAL_PUBLISH_JOB", jobId });
+  if (!response?.success || !response.job) throw new Error(response?.error || "Không đọc được nội dung từ Voltara Hub.");
+  const job = response.job;
+
+  params.delete("voltara_manual_job");
+  const cleanSearch = params.toString();
+  history.replaceState(null, "", `${location.pathname}${cleanSearch ? `?${cleanSearch}` : ""}${location.hash}`);
+
+  const style = document.createElement("style");
+  style.textContent = `
+    #voltara-manual-publisher{position:fixed;right:16px;bottom:16px;z-index:2147483647;width:310px;background:#101419;color:#eef4ff;border:1px solid #2563eb;border-radius:12px;box-shadow:0 18px 46px rgba(0,0,0,.45);font:13px Arial,sans-serif;overflow:hidden}
+    #voltara-manual-publisher .vmp-head{padding:11px 12px;background:#0e56b3;font-weight:800;display:flex;justify-content:space-between;gap:8px}
+    #voltara-manual-publisher .vmp-body{padding:12px;display:grid;gap:9px}
+    #voltara-manual-publisher .vmp-note{color:#b8c7dc;font-size:11px;line-height:1.4}
+    #voltara-manual-publisher .vmp-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    #voltara-manual-publisher button{border:1px solid #3b82f6;border-radius:7px;padding:9px 7px;background:#1877f2;color:white;font-weight:700;font-size:11px;cursor:pointer}
+    #voltara-manual-publisher button.alt{background:transparent;color:#72a7ff}
+    #voltara-manual-publisher button.vmp-auto{grid-column:1/-1;background:#059669;border-color:#10b981}
+    #voltara-manual-publisher button:disabled{opacity:.55;cursor:wait}
+    #voltara-manual-publisher .vmp-status{min-height:30px;color:#b8c7dc;font-size:11px;line-height:1.35}
+    #voltara-manual-publisher .vmp-close{border:0;background:transparent;padding:0;color:white;font-size:18px}
+  `;
+  document.documentElement.appendChild(style);
+
+  const panel = document.createElement("section");
+  panel.id = "voltara-manual-publisher";
+  const scheduleTimeText = job.scheduleMode && job.scheduledAt
+    ? new Date(job.scheduledAt).toLocaleString("vi-VN")
+    : "";
+  panel.innerHTML = `
+    <div class="vmp-head"><span>${job.scheduleMode ? "Voltara hẹn lịch Facebook" : "Voltara đăng thủ công"}</span><button class="vmp-close" title="Đóng">×</button></div>
+    <div class="vmp-body">
+      <div><strong>${job.pageName || "Fanpage đã chọn"}</strong></div>
+      <div class="vmp-note">${job.scheduleMode
+        ? `Giờ dự kiến: ${scheduleTimeText}. Tiện ích điền nội dung và media; bạn chọn Lên lịch, nhập đúng giờ rồi xác nhận trên Facebook.`
+        : "Tiện ích chỉ điền nội dung và media. Bạn kiểm tra, chọn quyền riêng tư rồi tự bấm Đăng."}</div>
+      <div class="vmp-actions">
+        <button data-vmp="all">Mở & điền tất cả</button>
+        <button data-vmp="caption">Điền caption</button>
+        <button data-vmp="media">Gắn ảnh/video</button>
+        <button class="alt" data-vmp="download">Tải media dự phòng</button>
+        <button class="vmp-auto" data-vmp="${job.scheduleMode ? "schedule" : "autopublish"}">${job.scheduleMode ? "Điền bài để hẹn lịch" : "Điền & đăng luôn"}</button>
+      </div>
+      <div class="vmp-status">Sẵn sàng. Có ${job.media?.length || 0} file media.</div>
+    </div>`;
+  document.body.appendChild(panel);
+  const status = panel.querySelector(".vmp-status");
+  const setStatus = text => { status.textContent = text; };
+  const batchPosition = job.batchTotal > 1
+    ? `Bài ${Number(job.batchIndex || 1)}/${job.batchTotal}`
+    : "";
+  if (batchPosition) {
+    panel.querySelector(".vmp-note").textContent = `${batchPosition}. Tiện ích sẽ tự đăng lần lượt các bài đã chọn. Vui lòng giữ tab Facebook này mở.`;
+    setStatus(`${batchPosition}: đang chuẩn bị nội dung và media...`);
+  }
+  panel.querySelector(".vmp-close").addEventListener("click", () => panel.remove());
+
+  let autoPublishRunning = false;
+  const runAutoPublish = async askConfirmation => {
+    if (autoPublishRunning) return;
+    if (askConfirmation) {
+      const confirmed = window.confirm("Tiện ích sẽ tự điền nội dung, gắn media và bấm Đăng công khai trên Fanpage này. Bạn chắc chắn muốn tiếp tục?");
+      if (!confirmed) {
+        setStatus("Đã hủy đăng tự động.");
+        return;
+      }
+    }
+
+    autoPublishRunning = true;
+    const actionButtons = Array.from(panel.querySelectorAll("button[data-vmp]"));
+    actionButtons.forEach(item => { item.disabled = true; });
+    try {
+      setStatus(`${batchPosition ? `${batchPosition}: ` : ""}Đang điền caption và tải media lên Facebook...`);
+      await fillFacebookCaption(job.caption);
+      if (job.media?.length) await attachFacebookMedia(job.media);
+      setStatus(`${batchPosition ? `${batchPosition}: ` : ""}Đang chờ Facebook tải media xong và đăng bài...`);
+      await continueAndPublishFacebookPost();
+
+      if (job.nextJobId) {
+        setStatus(`${batchPosition}: đã bấm Đăng. Đang chuyển sang bài tiếp theo...`);
+        await waitVoltara(4500);
+        const nextUrl = new URL(`https://www.facebook.com/${encodeURIComponent(job.pageId || "")}`);
+        nextUrl.searchParams.set("voltara_manual_job", job.nextJobId);
+        window.location.assign(nextUrl.toString());
+        return;
+      }
+      setStatus(batchPosition
+        ? `Đã hoàn tất ${job.batchTotal} bài trong danh sách.`
+        : "Đã bấm Đăng. Hãy chờ Facebook hoàn tất xử lý bài viết.");
+    } catch (error) {
+      setStatus(error?.message || "Không hoàn tất được thao tác.");
+    } finally {
+      autoPublishRunning = false;
+      actionButtons.forEach(item => { item.disabled = false; });
+    }
+  };
+
+  panel.addEventListener("click", async event => {
+    const button = event.target.closest("button[data-vmp]");
+    if (!button) return;
+    button.disabled = true;
+    try {
+      const action = button.dataset.vmp;
+      if (action === "autopublish") {
+        await runAutoPublish(true);
+        return;
+      } else if (action === "schedule") {
+        await fillFacebookCaption(job.caption);
+        const count = job.media?.length ? await attachFacebookMedia(job.media) : 0;
+        setStatus(`Đã điền bài${count ? ` và gắn ${count} file` : ""}. Bấm Tiếp, chọn Lên lịch và đặt giờ ${scheduleTimeText}.`);
+      } else if (action === "caption") {
+        await fillFacebookCaption(job.caption);
+        setStatus("Đã điền caption. Hãy kiểm tra trước khi đăng.");
+      } else if (action === "media") {
+        const count = await attachFacebookMedia(job.media || []);
+        setStatus(`Đã gắn ${count} file. Chờ Facebook tải xong rồi kiểm tra.`);
+      } else if (action === "download") {
+        await copyManualCaption(job.caption);
+        const result = await sendVoltaraRuntimeMessage({ type: "DOWNLOAD_MANUAL_MEDIA", media: job.media || [] });
+        if (!result?.success) throw new Error(result?.error || "Không tải được media.");
+        setStatus(`Đã copy caption và tải ${result.count} file vào thư mục Voltara-Facebook.`);
+      } else {
+        await fillFacebookCaption(job.caption);
+        const count = job.media?.length ? await attachFacebookMedia(job.media) : 0;
+        setStatus(`Đã điền bài${count ? ` và gắn ${count} file` : ""}. Bạn tự bấm Đăng.`);
+      }
+    } catch (error) {
+      setStatus(error?.message || "Không hoàn tất được thao tác.");
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  if (job.autoStart && !job.scheduleMode) {
+    window.setTimeout(() => runAutoPublish(false), 700);
+  }
 }

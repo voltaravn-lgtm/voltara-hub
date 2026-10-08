@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Voltara Product Importer",
-  "version": "1.3.12",
+  "version": "1.3.24",
   "description": "Lấy thông tin sản phẩm từ Shopee và gửi về Voltara Product Hub.",
   "permissions": [
     "storage",
     "activeTab",
     "scripting",
     "tabs",
-    "webRequest"
+    "webRequest",
+    "downloads"
   ],
   "host_permissions": [
     "https://*.run.app/*",

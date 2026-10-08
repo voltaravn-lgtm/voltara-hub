@@ -53,12 +53,26 @@ export const FacebookPostEditorPage: React.FC<FacebookPostEditorPageProps> = ({
     }
   };
 
+  const handleManualPublish = async (updatedPost: FacebookPost, pageId: string) => {
+    const page = pages.find(item => item.id === pageId);
+    if (!page) {
+      addToast('Không tìm thấy Fanpage đã chọn.', 'error');
+      return;
+    }
+    const res = await facebookPublishingService.prepareManualPost(updatedPost, page);
+    addToast(
+      res.success ? 'Đã mở Facebook. Dùng bảng Voltara để điền bài rồi tự bấm Đăng.' : (res.error || 'Không mở được Facebook.'),
+      res.success ? 'info' : 'error'
+    );
+  };
+
   return (
     <FacebookPostEditor
       post={post}
       pages={pages}
       onSaveDraft={handleSaveDraft}
       onPublishNow={handlePublishNow}
+      onManualPublish={handleManualPublish}
       onSchedule={handleSchedule}
       onCancel={onNavigateBack}
     />

@@ -8,7 +8,7 @@ window.VoltaraFacebookParser.urlParser = {
     const dbg = window.VoltaraFacebookParser.debug;
     const utils = window.VoltaraFacebookParser.utils;
 
-    const permalinkSelector = 'a[href*="/posts/"], a[href*="/permalink/"], a[href*="/story_fbid="], a[href*="/fbid="], a[href*="/permalink.php?"], a[href*="/videos/"], a[href*="/reel/"]';
+    const permalinkSelector = 'a[href*="/posts/"], a[href*="/permalink/"], a[href*="story_fbid="], a[href*="fbid="], a[href*="/permalink.php"], a[href*="/videos/"], a[href*="/reel/"], a[href*="/watch/"], a[href*="/share/p/"], a[href*="/share/r/"], a[href*="/share/v/"]';
     const anchors = Array.from(article.querySelectorAll(permalinkSelector));
     
     let rawUrl = "";
@@ -27,7 +27,7 @@ window.VoltaraFacebookParser.urlParser = {
 
     // Check if the current window location is a permalink of a post
     const currentUrl = window.location.href;
-    const isCurrentUrlPermalink = /\/posts\/|\/permalink\/|story_fbid=|fbid=|\/videos\/|\/reel\//.test(currentUrl);
+    const isCurrentUrlPermalink = /\/posts\/|\/permalink\/|story_fbid=|fbid=|\/videos\/|\/reel\/|\/watch\/|\/share\/(p|r|v)\//.test(currentUrl);
 
     if (!rawUrl && isCurrentUrlPermalink) {
       dbg.log("Using current tab location as post permalink fallback.");
@@ -52,8 +52,10 @@ window.VoltaraFacebookParser.urlParser = {
       /fbid=(\d+)/,
       /\/permalink\.php\?story_fbid=(\d+)/,
       /\/videos\/(\d+)/,
+      /[?&]v=(\d+)/,
       /\/photos\/a\.\d+\/(\d+)/,
-      /\/reel\/([A-Za-z0-9_-]+)/
+      /\/reel\/([A-Za-z0-9_-]+)/,
+      /\/share\/(?:p|r|v)\/([A-Za-z0-9_-]+)/
     ];
     
     for (const regex of postIdMatches) {

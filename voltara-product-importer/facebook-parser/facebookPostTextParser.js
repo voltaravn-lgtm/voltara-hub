@@ -13,7 +13,9 @@ window.VoltaraFacebookParser.textParser = {
         .replace(/\u00a0/g, " ")
         .replace(/Xem thêm\.\.\.|See more\.\.\.|See More\.\.\./g, "")
         .split(/\r?\n/)
-        .map(line => line.trim())
+        .map(line => line
+          .replace(/\s*(?:Ẩn bớt|Ẩn bài|See less|Hide post)\s*$/giu, "")
+          .trim())
         .filter(line => {
           if (!line) return false;
           const lower = line.toLowerCase();

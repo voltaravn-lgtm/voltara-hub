@@ -6,11 +6,11 @@ window.VoltaraFacebookParser.detector = {
   MIN_ACCEPTABLE_SCORE: 35,
 
   isReelPage: function() {
-    return /\/(reel|reels)\/|\/videos\//i.test(window.location.pathname);
+    return /\/(reel|reels)\/|\/videos\/|\/share\/(r|v)\//i.test(window.location.pathname);
   },
 
   isPostDetailPage: function() {
-    return /\/posts\/|\/permalink\/|\/permalink\.php|story_fbid=|[?&]fbid=/i.test(
+    return /\/posts\/|\/permalink\/|\/permalink\.php|\/share\/(p|r|v)\/|\/watch\/|story_fbid=|[?&](fbid|v)=/i.test(
       window.location.pathname + window.location.search
     );
   },
@@ -113,7 +113,8 @@ window.VoltaraFacebookParser.detector = {
     const message = el.querySelector('[data-ad-comet-preview="message"], [data-ad-preview="message"]');
     const permalink = el.querySelector(
       'a[href*="/posts/"], a[href*="/permalink/"], a[href*="story_fbid="], ' +
-      'a[href*="fbid="], a[href*="/videos/"], a[href*="/reel/"]'
+      'a[href*="fbid="], a[href*="/videos/"], a[href*="/reel/"], ' +
+      'a[href*="/watch/"], a[href*="/share/p/"], a[href*="/share/r/"], a[href*="/share/v/"]'
     );
     const video = el.querySelector('video');
     const largeImage = Array.from(el.querySelectorAll('img')).some(img => {
@@ -188,12 +189,13 @@ window.VoltaraFacebookParser.detector = {
     if (!el) return "";
     const anchor = el.querySelector(
       'a[href*="/posts/"], a[href*="story_fbid="], a[href*="/permalink/"], ' +
-      'a[href*="/videos/"], a[href*="/reel/"]'
+      'a[href*="fbid="], a[href*="/videos/"], a[href*="/reel/"], ' +
+      'a[href*="/watch/"], a[href*="/share/p/"], a[href*="/share/r/"], a[href*="/share/v/"]'
     );
     if (!anchor) return "";
     try {
       const url = new URL(anchor.getAttribute('href') || anchor.href, window.location.origin);
-      const id = url.searchParams.get('story_fbid') || '';
+      const id = url.searchParams.get('story_fbid') || url.searchParams.get('fbid') || url.searchParams.get('v') || '';
       return `${url.pathname.replace(/\/$/, '')}${id ? `?id=${id}` : ''}`;
     } catch (_) {
       return (anchor.getAttribute('href') || '').split('#')[0];
@@ -205,11 +207,12 @@ window.VoltaraFacebookParser.detector = {
     const keys = new Set();
     el.querySelectorAll(
       'a[href*="/posts/"], a[href*="story_fbid="], a[href*="/permalink/"], ' +
-      'a[href*="/videos/"], a[href*="/reel/"]'
+      'a[href*="fbid="], a[href*="/videos/"], a[href*="/reel/"], ' +
+      'a[href*="/watch/"], a[href*="/share/p/"], a[href*="/share/r/"], a[href*="/share/v/"]'
     ).forEach(anchor => {
       try {
         const url = new URL(anchor.getAttribute('href') || anchor.href, window.location.origin);
-        const id = url.searchParams.get('story_fbid') || '';
+        const id = url.searchParams.get('story_fbid') || url.searchParams.get('fbid') || url.searchParams.get('v') || '';
         keys.add(`${url.pathname.replace(/\/$/, '')}${id ? `?id=${id}` : ''}`);
       } catch (_) {
         const href = (anchor.getAttribute('href') || '').split('#')[0];
@@ -267,7 +270,8 @@ window.VoltaraFacebookParser.detector = {
     });
     document.querySelectorAll(
       'a[href*="/posts/"], a[href*="/permalink/"], a[href*="story_fbid="], ' +
-      'a[href*="fbid="], a[href*="/videos/"], a[href*="/reel/"]'
+      'a[href*="fbid="], a[href*="/videos/"], a[href*="/reel/"], ' +
+      'a[href*="/watch/"], a[href*="/share/p/"], a[href*="/share/r/"], a[href*="/share/v/"]'
     ).forEach(permalink => {
       const root = this.findFallbackPostRootFromSignal(permalink);
       if (root) candidates.add(root);

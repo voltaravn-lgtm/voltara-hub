@@ -61,13 +61,30 @@ export const facebookImportService = {
     const posts: FacebookPost[] = JSON.parse(stored);
     let changed = false;
     const normalized = posts.map(post => {
+      let postChanged = false;
+      const normalizedMedia = (post.media || []).map(item => {
+        // Older local builds persisted APP_URL (sometimes the Vercel host)
+        // in front of files that only exist on this server. Make those URLs
+        // portable and let the current page origin serve the file.
+        const mediaPath = String(item.url || '').match(/^https?:\/\/[^/]+(\/api\/facebook\/media\/[^?#]+)(?:[?#].*)?$/i)?.[1];
+        const audioPath = String(item.audioUrl || '').match(/^https?:\/\/[^/]+(\/api\/facebook\/media\/[^?#]+)(?:[?#].*)?$/i)?.[1];
+        if (!mediaPath && !audioPath) return item;
+        postChanged = true;
+        return {
+          ...item,
+          ...(mediaPath ? { url: mediaPath } : {}),
+          ...(audioPath ? { audioUrl: audioPath } : {})
+        };
+      });
       const isReel = /\/(reel|reels)\//i.test(post.postUrl || '');
-      const hasVideo = post.media?.some(item => item.type === 'video');
-      if (!isReel || !hasVideo) return post;
-      const videosOnly = post.media.filter(item => item.type === 'video');
-      if (videosOnly.length === post.media.length) return post;
+      const hasVideo = normalizedMedia.some(item => item.type === 'video');
+      const finalMedia = isReel && hasVideo
+        ? normalizedMedia.filter(item => item.type === 'video')
+        : normalizedMedia;
+      if (finalMedia.length !== normalizedMedia.length) postChanged = true;
+      if (!postChanged) return post;
       changed = true;
-      return { ...post, media: videosOnly };
+      return { ...post, media: finalMedia };
     });
     if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
     return normalized;

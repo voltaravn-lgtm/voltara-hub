@@ -46,6 +46,25 @@ interface VoltaraDb {
   products: ExtensionProductPending[];
   facebookPosts?: any[];
   facebookOAuth?: FacebookOAuthStore;
+  facebookManualPublishJobs?: FacebookManualPublishJob[];
+}
+
+interface FacebookManualPublishJob {
+  id: string;
+  caption: string;
+  media: Array<{ type: "image" | "video"; url: string; thumbnail?: string }>;
+  pageId: string;
+  pageName?: string;
+  autoStart?: boolean;
+  nextJobId?: string;
+  batchId?: string;
+  batchIndex?: number;
+  batchTotal?: number;
+  sourcePostId?: string;
+  scheduleMode?: boolean;
+  scheduledAt?: string;
+  createdAt: string;
+  expiresAt: string;
 }
 
 // Enable CORS for Chrome Extension and all other pre-flight API operations
@@ -91,7 +110,8 @@ const ensureDbExist = () => {
       },
       products: [],
       facebookPosts: [],
-      facebookOAuth: { pages: [] }
+      facebookOAuth: { pages: [] },
+      facebookManualPublishJobs: []
     };
 
     // On Vercel, try to seed from packaged DB if it exists
@@ -120,6 +140,9 @@ const readDb = (): VoltaraDb => {
     if (!parsed.facebookOAuth) {
       parsed.facebookOAuth = { pages: [] };
     }
+    if (!parsed.facebookManualPublishJobs) {
+      parsed.facebookManualPublishJobs = [];
+    }
     return parsed;
   } catch (err) {
     console.error("Error reading JSON database:", err);
@@ -133,7 +156,8 @@ const readDb = (): VoltaraDb => {
       },
       products: [],
       facebookPosts: [],
-      facebookOAuth: { pages: [] }
+      facebookOAuth: { pages: [] },
+      facebookManualPublishJobs: []
     };
   }
 };
@@ -147,6 +171,9 @@ const writeDb = (data: VoltaraDb) => {
     }
     if (!data.facebookOAuth) {
       data.facebookOAuth = { pages: [] };
+    }
+    if (!data.facebookManualPublishJobs) {
+      data.facebookManualPublishJobs = [];
     }
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), "utf-8");
   } catch (err) {
@@ -494,16 +521,52 @@ app.get("/api/extensions/facebook", (req, res) => {
   res.json(db.facebookPosts || []);
 });
 
+app.post(
+  "/api/facebook/media/upload",
+  express.raw({ type: () => true, limit: "100mb" }),
+  async (req, res) => {
+    const body = Buffer.isBuffer(req.body) ? req.body : Buffer.alloc(0);
+    const mimeType = String(req.headers["content-type"] || "").split(";")[0].toLowerCase();
+    const allowedTypes: Record<string, { extension: string; type: "image" | "video" }> = {
+      "image/jpeg": { extension: "jpg", type: "image" },
+      "image/png": { extension: "png", type: "image" },
+      "image/webp": { extension: "webp", type: "image" },
+      "image/gif": { extension: "gif", type: "image" },
+      "video/mp4": { extension: "mp4", type: "video" },
+      "video/webm": { extension: "webm", type: "video" },
+      "video/quicktime": { extension: "mov", type: "video" }
+    };
+    const mediaType = allowedTypes[mimeType];
+    if (!mediaType) {
+      return res.status(415).json({ success: false, error: "Chỉ hỗ trợ JPG, PNG, WEBP, GIF, MP4, WEBM hoặc MOV." });
+    }
+    if (!body.length) {
+      return res.status(400).json({ success: false, error: "Tệp tải lên đang trống." });
+    }
+    try {
+      await fs.promises.mkdir(FACEBOOK_MEDIA_DIR, { recursive: true });
+      const filename = `schedule-${Date.now()}-${crypto.randomBytes(8).toString("hex")}.${mediaType.extension}`;
+      await fs.promises.writeFile(path.join(FACEBOOK_MEDIA_DIR, filename), body);
+      return res.json({ success: true, media: { type: mediaType.type, url: `/api/facebook/media/${filename}` } });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, error: error?.message || "Không lưu được media." });
+    }
+  }
+);
+
 app.get("/api/facebook/media/:filename", (req, res) => {
   const filename = String(req.params.filename || "");
-  if (!/^[a-zA-Z0-9_-]+\.mp4$/.test(filename)) {
+  if (!/^[a-zA-Z0-9_-]+\.(?:mp4|webm|mov|jpg|jpeg|png|webp|gif)$/i.test(filename)) {
     return res.status(400).json({ success: false, error: "Tên tệp video không hợp lệ." });
   }
   const mediaPath = path.join(FACEBOOK_MEDIA_DIR, filename);
   if (!fs.existsSync(mediaPath)) {
     return res.status(404).json({ success: false, error: "Video đã ghép không còn tồn tại." });
   }
-  res.type("video/mp4");
+  // Local media can be normalized/repaired in place. Do not let the browser
+  // keep an earlier incompatible VP9/AV1 response under the same URL.
+  res.setHeader("Cache-Control", "no-store, max-age=0");
+  res.type(path.extname(filename));
   return res.sendFile(mediaPath);
 });
 
@@ -522,7 +585,11 @@ app.post("/api/extensions/facebook/import", async (req, res) => {
   
   const body = req.body;
   
-  const caption = typeof body.originalCaption === "string" ? body.originalCaption.trim() : "";
+  const caption = typeof body.originalCaption === "string"
+    ? body.originalCaption
+        .replace(/\s*(?:Ẩn bớt|Ẩn bài|See less|Hide post)\s*$/gimu, "")
+        .trim()
+    : "";
   const media = Array.isArray(body.media)
     ? body.media.filter((m: any) => m && typeof m.url === "string" && m.url.trim())
     : [];
@@ -542,7 +609,11 @@ app.post("/api/extensions/facebook/import", async (req, res) => {
         await fs.promises.writeFile(path.join(FACEBOOK_MEDIA_DIR, filename), merged.bytes);
         normalizedMedia.push({
           type: "video",
-          url: `${APP_URL}/api/facebook/media/${filename}`,
+          // Keep locally stored media host-agnostic. The browser will resolve
+          // this against localhost in development and the deployed host in
+          // production, so APP_URL cannot accidentally point local posts at
+          // Vercel (which makes otherwise valid videos appear as 0:00).
+          url: `/api/facebook/media/${filename}`,
           ...(item.thumbnailUrl ? { thumbnail: item.thumbnailUrl } : {})
         });
       } else {
@@ -596,6 +667,137 @@ app.delete("/api/extensions/facebook/:id", (req, res) => {
   db.facebookPosts = filtered;
   writeDb(db);
   res.json({ success: true, message: "Đã xóa bài viết đã import." });
+});
+
+// Prepare a short-lived handoff that the extension can read after the Hub
+// opens the selected Page. The extension stops before the final Publish click.
+app.post("/api/facebook/manual-publish", (req, res) => {
+  const post = req.body?.post || {};
+  const pageId = typeof req.body?.pageId === "string" ? req.body.pageId.trim() : "";
+  const pageName = typeof req.body?.pageName === "string" ? req.body.pageName.trim() : "";
+  const scheduleMode = req.body?.scheduleMode === true;
+  const scheduledAt = typeof req.body?.scheduledAt === "string" ? req.body.scheduledAt.trim() : "";
+  const caption = String(post.editedCaption || post.originalCaption || "")
+    .replace(/\s*(?:Ẩn bớt|Ẩn bài|See less|Hide post)\s*$/gimu, "")
+    .trim();
+  const requestOrigin = `${req.protocol}://${req.get("host")}`;
+  const media = Array.isArray(post.media)
+    ? post.media
+        .filter((item: any) => item && (item.type === "image" || item.type === "video") && typeof item.url === "string" && (/^https?:\/\//i.test(item.url) || /^\/api\/facebook\/media\//i.test(item.url)))
+        .slice(0, 20)
+        .map((item: any) => ({
+          type: item.type as "image" | "video",
+          // The extension runs on facebook.com, so expand relative Hub media
+          // URLs before handing the job to the content script.
+          url: /^\//.test(item.url.trim()) ? `${requestOrigin}${item.url.trim()}` : item.url.trim(),
+          ...(typeof item.thumbnail === "string" && item.thumbnail ? { thumbnail: item.thumbnail } : {})
+        }))
+    : [];
+
+  if (!pageId) {
+    return res.status(400).json({ success: false, error: "Vui lòng chọn một Fanpage đích." });
+  }
+  if (!caption && media.length === 0) {
+    return res.status(400).json({ success: false, error: "Bài đăng phải có nội dung hoặc media." });
+  }
+
+  const db = readDb();
+  const now = Date.now();
+  const job: FacebookManualPublishJob = {
+    id: crypto.randomBytes(18).toString("base64url"),
+    caption: caption.slice(0, 63206),
+    media,
+    pageId,
+    pageName: pageName || undefined,
+    scheduleMode,
+    scheduledAt: scheduleMode && !Number.isNaN(Date.parse(scheduledAt)) ? new Date(scheduledAt).toISOString() : undefined,
+    createdAt: new Date(now).toISOString(),
+    expiresAt: new Date(now + 30 * 60 * 1000).toISOString()
+  };
+  db.facebookManualPublishJobs = (db.facebookManualPublishJobs || [])
+    .filter(item => Date.parse(item.expiresAt) > now)
+    .slice(-19);
+  db.facebookManualPublishJobs.push(job);
+  writeDb(db);
+
+  const facebookUrl = `https://www.facebook.com/${encodeURIComponent(pageId)}?voltara_manual_job=${encodeURIComponent(job.id)}`;
+  return res.json({ success: true, jobId: job.id, facebookUrl, expiresAt: job.expiresAt });
+});
+
+// Prepare one browser-driven queue. The extension posts each item, then
+// navigates the same Facebook tab to the next job to avoid popup storms and
+// simultaneous video uploads.
+app.post("/api/facebook/manual-publish-batch", (req, res) => {
+  const posts = Array.isArray(req.body?.posts) ? req.body.posts.slice(0, 20) : [];
+  const pageId = typeof req.body?.pageId === "string" ? req.body.pageId.trim() : "";
+  const pageName = typeof req.body?.pageName === "string" ? req.body.pageName.trim() : "";
+  if (!pageId) return res.status(400).json({ success: false, error: "Vui lòng chọn một Fanpage đích." });
+  if (!posts.length) return res.status(400).json({ success: false, error: "Vui lòng chọn ít nhất một bài viết." });
+
+  const requestOrigin = `${req.protocol}://${req.get("host")}`;
+  const now = Date.now();
+  const batchId = crypto.randomBytes(12).toString("base64url");
+  const expiresAt = new Date(now + 2 * 60 * 60 * 1000).toISOString();
+  const jobs: FacebookManualPublishJob[] = posts.map((post: any, index: number) => {
+    const caption = String(post?.editedCaption || post?.originalCaption || "")
+      .replace(/\s*(?:Ẩn bớt|Ẩn bài|See less|Hide post)\s*$/gimu, "")
+      .trim()
+      .slice(0, 63206);
+    const media = Array.isArray(post?.media)
+      ? post.media
+          .filter((item: any) => item && (item.type === "image" || item.type === "video") && typeof item.url === "string" && (/^https?:\/\//i.test(item.url) || /^\/api\/facebook\/media\//i.test(item.url)))
+          .slice(0, 20)
+          .map((item: any) => ({
+            type: item.type as "image" | "video",
+            url: /^\//.test(item.url.trim()) ? `${requestOrigin}${item.url.trim()}` : item.url.trim(),
+            ...(typeof item.thumbnail === "string" && item.thumbnail ? { thumbnail: item.thumbnail } : {})
+          }))
+      : [];
+    return {
+      id: crypto.randomBytes(18).toString("base64url"),
+      caption,
+      media,
+      pageId,
+      pageName: pageName || undefined,
+      autoStart: true,
+      batchId,
+      batchIndex: index + 1,
+      batchTotal: posts.length,
+      sourcePostId: typeof post?.id === "string" ? post.id : undefined,
+      createdAt: new Date(now).toISOString(),
+      expiresAt
+    };
+  });
+  for (let index = 0; index < jobs.length - 1; index += 1) jobs[index].nextJobId = jobs[index + 1].id;
+
+  const db = readDb();
+  db.facebookManualPublishJobs = (db.facebookManualPublishJobs || [])
+    .filter(item => Date.parse(item.expiresAt) > now)
+    .slice(-Math.max(0, 100 - jobs.length));
+  db.facebookManualPublishJobs.push(...jobs);
+  writeDb(db);
+
+  const facebookUrl = `https://www.facebook.com/${encodeURIComponent(pageId)}?voltara_manual_job=${encodeURIComponent(jobs[0].id)}`;
+  return res.json({ success: true, batchId, count: jobs.length, facebookUrl, expiresAt });
+});
+
+app.get("/api/extensions/facebook/manual-publish/:id", (req, res) => {
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+  const db = readDb();
+  if (!db.config.isConnected || !db.config.token || token !== db.config.token) {
+    return res.status(401).json({ success: false, error: "Mã kết nối tiện ích không hợp lệ." });
+  }
+
+  const now = Date.now();
+  db.facebookManualPublishJobs = (db.facebookManualPublishJobs || [])
+    .filter(item => Date.parse(item.expiresAt) > now);
+  const job = db.facebookManualPublishJobs.find(item => item.id === req.params.id);
+  writeDb(db);
+  if (!job) {
+    return res.status(404).json({ success: false, error: "Gói đăng thủ công đã hết hạn hoặc không tồn tại." });
+  }
+  return res.json({ success: true, job });
 });
 
 // ==========================================
@@ -834,8 +1036,15 @@ const muxFacebookDashVideo = async (videoUrl: string, audioUrl: string) => {
       "-i", audioPath,
       "-map", "0:v:0",
       "-map", "1:a:0",
-      "-c:v", "copy",
+      // Facebook DASH may currently deliver VP9 or AV1 inside MP4. Some
+      // Chromium/Coc Coc builds show those files as 0:00 even though ffprobe
+      // sees valid tracks. Normalize to broadly supported H.264 + AAC.
+      "-c:v", "libx264",
+      "-preset", "veryfast",
+      "-crf", "23",
+      "-pix_fmt", "yuv420p",
       "-c:a", "aac",
+      "-b:a", "128k",
       "-shortest",
       "-movflags", "+faststart",
       outputPath

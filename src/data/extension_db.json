@@ -45,6 +45,26 @@
         "connectedAt": "2026-07-14T05:19:30.363Z"
       }
     ],
-    "encryptedUserToken": "7p-toaY8Eo9WaXAH.v4P1SHq6uHf1cLP9XpKkOA.uaORUOKIL7t3s8VDp0RpinvpL_GTBi8I1KgZMMGAZfMyTekVv-5-BjhqjQKkXzR4EqFb2tvi2v2k85oXCx6EoU87AYSl14MIZ8ibwXuaII44HC2V6Q2Y8AGwPMmDRysDuKiLGa5_XWLWG1NnRUbiv2Quj1a1MQ26e9-zd547R8qvry0le1xl8nQ7_wlO-jETeWyL92pU4ZJ_ogW5avLekVjCO1M4A6vfzuGUiDhwZm2P4Hnaoamc1lxO3MUBrmn-GQi1kV3xgErMam2Q06384HyXh3u1"
-  }
+    "encryptedUserToken": "7p-toaY8Eo9WaXAH.v4P1SHq6uHf1cLP9XpKkOA.uaORUOKIL7t3s8VDp0RpinvpL_GTBi8I1KgZMMGAZfMyTekVv-5-BjhqjQKkXzR4EqFb2tvi2v2k85oXCx6EoU87AYSl14MIZ8ibwXuaII44HC2V6Q2Y8AGwPMmDRysDuKiLGa5_XWLWG1NnRUbiv2Quj1a1MQ26e9-zd547R8qvry0le1xl8nQ7_wlO-jETeWyL92pU4ZJ_ogW5avLekVjCO1M4A6vfzuGUiDhwZm2P4Hnaoamc1lxO3MUBrmn-GQi1kV3xgErMam2Q06384HyXh3u1",
+    "stateHash": "98feb2577e75c1f86a5ec71ac198cd694e1845405b4ab1e6772ac9b3eb05056c",
+    "stateExpiresAt": "2026-10-08T06:53:26.929Z"
+  },
+  "facebookManualPublishJobs": [
+    {
+      "id": "b9x4ahGlgiBc-oEfcvW8TZS5",
+      "caption": "💧 Máy Lọc Nước 5 Giai Đoạn – Nước Sạch, Cuộc Sống Tốt Hơn\nMang lại nước uống an toàn và thơm ngon cho khách hàng với hệ thống lọc 5 giai đoạn tiên tiến của chúng tôi.\n🔬 PP + UDF + RO + T33 + PP lọc đa tầng\n🚰 Loại bỏ clo, gỉ sét, vi khuẩn, tạp chất hiệu quả\n💧 Cải thiện hương vị nước và chất lượng cho việc uống hàng ngày\n🏠 Phù hợp cho gia đình, văn phòng, và sử dụng thương mại\n⚙️ Hiệu suất ổn định với việc lắp đặt và bảo trì dễ dàng\n✔ OEM & ODM có sẵn\n✔ Cung cấp trực tiếp từ nhà máy\n✔ MOQ chỉ 50 chiếc\n✔ Thiết kế cho nhà phân phối, khách sỉ & chủ thương hiệu\nGiải pháp đáng tin cậy để mở rộng kinh doanh máy lọc nước của bạn trên thị trường toàn cầu.\n📩 Liên hệ với chúng tôi ngay hôm nay để nhận danh mục và giá sỉ.\n#WaterPurifier #5StageFiltration #ROWaterPurifier #CleanWater #OEM #ODM #Wholesale #Distributor #WaterFilter #FactoryDirect",
+      "media": [
+        {
+          "type": "image",
+          "url": "http://localhost:3100/api/facebook/media/schedule-1784292175800-4b234ab642d21028.jpg"
+        }
+      ],
+      "pageId": "1826362154251230",
+      "pageName": "Vua Ô Tô",
+      "scheduleMode": true,
+      "scheduledAt": "2026-07-17T13:12:00.000Z",
+      "createdAt": "2026-07-17T12:43:11.011Z",
+      "expiresAt": "2026-07-17T13:13:11.011Z"
+    }
+  ]
 }

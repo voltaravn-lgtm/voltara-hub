@@ -24,6 +24,21 @@ export interface FacebookPost {
   updatedAt: string;
 }
 
+export type FacebookScheduleDraftStatus = 'draft' | 'opened' | 'scheduled' | 'cancelled';
+
+export interface FacebookScheduleDraft {
+  id: string;
+  caption: string;
+  media: FacebookMediaItem[];
+  pageId: string;
+  pageName: string;
+  scheduledAt: string;
+  status: FacebookScheduleDraftStatus;
+  lastOpenedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface FacebookPage {
   id: string;
   name: string;

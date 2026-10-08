@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { FacebookPost, FacebookPage, FacebookMediaItem } from '../../types/facebookTypes';
 import { FacebookPageSelector } from './FacebookPageSelector';
 import { FacebookMediaGrid } from './FacebookMediaGrid';
-import { FileText, Save, Send, Calendar, ArrowLeft, RefreshCw, AlertTriangle } from 'lucide-react';
+import { FileText, Save, Send, Calendar, ArrowLeft, RefreshCw, AlertTriangle, ExternalLink } from 'lucide-react';
 
 interface FacebookPostEditorProps {
   post: FacebookPost;
   pages: FacebookPage[];
   onSaveDraft: (post: FacebookPost) => void;
   onPublishNow: (post: FacebookPost, pageIds: string[]) => void;
+  onManualPublish: (post: FacebookPost, pageId: string) => void;
   onSchedule: (post: FacebookPost, pageIds: string[], time: string) => void;
   onCancel: () => void;
 }
@@ -18,6 +19,7 @@ export const FacebookPostEditor: React.FC<FacebookPostEditorProps> = ({
   pages,
   onSaveDraft,
   onPublishNow,
+  onManualPublish,
   onSchedule,
   onCancel,
 }) => {
@@ -68,6 +70,14 @@ export const FacebookPostEditor: React.FC<FacebookPostEditorProps> = ({
       targetPages: selectedPageIds,
     };
     onSchedule(updatedPost, selectedPageIds, scheduleTime);
+  };
+
+  const handleManualPublish = () => {
+    if (selectedPageIds.length !== 1) {
+      alert('Vui lòng chọn đúng một Fanpage để mở trình đăng thủ công.');
+      return;
+    }
+    onManualPublish({ ...post, editedCaption, media, targetPages: selectedPageIds }, selectedPageIds[0]);
   };
 
   return (
@@ -184,6 +194,7 @@ export const FacebookPostEditor: React.FC<FacebookPostEditorProps> = ({
                 <span>Lên lịch đăng tải</span>
               </button>
             ) : (
+              <div className="space-y-2">
               <button
                 type="button"
                 onClick={handlePublishNow}
@@ -193,6 +204,17 @@ export const FacebookPostEditor: React.FC<FacebookPostEditorProps> = ({
                 <Send className="w-4 h-4" />
                 <span>Đăng ngay lên Fanpage</span>
               </button>
+              <button
+                type="button"
+                onClick={handleManualPublish}
+                className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 text-blue-700 bg-white border border-blue-200 hover:bg-blue-50 rounded-xl transition-all text-xs font-bold"
+                id="btn-manual-publish-editor"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>Mở Facebook &amp; điền bài</span>
+              </button>
+              <p className="text-[10px] text-slate-500 leading-relaxed">Tiện ích sẽ chuẩn bị nội dung và media; bạn kiểm tra rồi tự bấm Đăng.</p>
+              </div>
             )}
           </div>
 

@@ -17,7 +17,7 @@ export const FacebookMediaGrid: React.FC<FacebookMediaGridProps> = ({
   const [showAddForm, setShowAddForm] = useState(false);
   const [videoStatus, setVideoStatus] = useState<Record<string, 'loading' | 'ready' | 'audio' | 'error'>>({});
   const isDirectVideoUrl = (url: string) =>
-    /^https?:\/\//i.test(url) &&
+    (/^https?:\/\//i.test(url) || /^\/api\/facebook\/media\//i.test(url)) &&
     !/(?:facebook\.com|fb\.watch)\/(?:reel|reels|posts|videos)?/i.test(url);
 
   const handleRemove = (index: number) => {
