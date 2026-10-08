@@ -11,43 +11,399 @@
   "facebookOAuth": {
     "pages": [
       {
+        "id": "1054221027778216",
+        "name": "HN Studio",
+        "category": "Nghệ thuật & Giải trí",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/829544102_122103774578568241_6743997275822112786_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=dtuIycOsvqQQ7kNvwH_FbFw&_nc_oc=AdrHyh79n2R0uHUj45fNcGD6VmgYUYzsShiezjLkAw2hXsr7Dyyt12AOY-udCANG7fVOnotsw-icvjhFnMeP79Fe&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQIPisOf1bhVWptAjGkS9zUVWvynnsfy4cPxWU5NvmQeshJIPly9oM2-iTAnr6zzfn6nhDrCkHzztQ&oh=00_AQPATle4DtiTDxuUKlRybOmyU0lUBW4-6gSLSP0zhvnDyQ&oe=6ACD3493",
+        "status": "connected",
+        "encryptedAccessToken": "IwLNUUZfACRW1mwL.Lx5Q1msiAIiAF1disPLF3Q.sqTpWgtKWqq7m5n1jzggoD8kbo1VEzYtAzfd_Q9JnzniTxfO0xt9Inyg8xnwVmySq-Dz_9SEUv69RXmYRdEb3fBU4twNGNeQv29Qrty-xYr2sM48UECwlhqf2IF28pZ_D9xcCMDdAYuA8FT-LorTnZT5gjDR3WFthWtQUDBu3ratrsuvHuuRru20wKPAIoGPl5ipa8TdqTa3EaH4qA8E9jzjA4ecpAF1N_FEkpL6K9JY6j84Z5VKjBDj9vThPZREa2u1Lo_2911O",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "105550481100171",
+        "name": "Mỹ Phẩm Thiên Nhiên và Tư Vấn Làm Đẹp",
+        "category": "Sức khỏe/làm đẹp",
+        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/398229355_749957270480676_3494125204257224103_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=yQwdtsVahUoQ7kNvwHHgvRR&_nc_oc=AdoCYCts2c-wFV3Pj4qjt_6ef2FWkWNt9Jv3Xv9qYxrGjWF9r5OivVXFNk-631T_8iB_rguf1cB_OiTiQEgPCt0u&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQJ6ynkoJhLALYi7o6RLQu11SRLQGgy0PeauxdFldAI7ci3vuX-ryh0A5zXe_UoRKJRFNiPhjb2XWg&oh=00_AQNcrCV9dAmL-X7a5a33STybAq92RWR1JyaAbhRzgQiIuw&oe=6ACD2F1E",
+        "status": "connected",
+        "encryptedAccessToken": "m2cG3A50DZIDShMh.S9b84sGn9iyN2JQ1_ddAhQ.wUcUfzK0KYMk3220DGiEyAYuUI9BnHIEXnUWz6--8AcOQEwhsQ1ZHGXmgskV7CS_V3KaDBxKFN2bFNiim294bzsQiwXxn3h9RGAuu2xIgDb_OduVhlKVK7yq0kdWWb-3D43tUYrobG2HlOyyw3v8BVyS8SGrkziml7atULPt3dihH5GpnQyOE6wSxABFoANURWVFTfB8jACIJxtRKu3QGAdu4w9T3U2V1cIcaWadBjTyO2hQTF39x2IVBJdffnxrEQaU1n9eLn8PPVU",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "102572608272646",
+        "name": "Cocofarm - Đặc sản Xứ Dừa CN HCM",
+        "category": "Cửa hàng quà tặng văn hóa",
+        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/322400870_1669612300101280_5693308509743107280_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=GfZQPUj21_cQ7kNvwFqKNWw&_nc_oc=AdrCalPhGKkA8U1qUzNRQDZmAZpUS0ORLxG0UAHruwT8Z62RCiLcp4z__MP_xKB_ArWfbRAQOL5CnyLav06_VSaq&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQLQskexiycoi_Au8n6v-Nx8kRQX9GmY28JZw3dkBRLvnE9NNBpnrBBkjksBGuO6GVjlqOgDTTqvQg&oh=00_AQNA4g3YkJJ_p8fzexUl3EhCuz5ziMMZAHhfn42OvTHnYQ&oe=6ACD061B",
+        "status": "connected",
+        "encryptedAccessToken": "vmL1rjohc9sIw3cF.qUZ0uecQ2XAoS21Y9n4iYg.vnC_GjYHQ_BGE9X2hho3Css38gGUOYUPN1zZeOWqg4Xm57SNqOSNV6Bc3hX5ihrqI436CYIly0F_cNlPNCsKUE0tMIAh7sSqjTIvEgdTHEIS98MHQyOdMZHMVcGf6RDo4VjAYKIPx_dHwWN29Z4naQkOasnwbjulAOjNCBs4-bzxB7nXKqB8N_k-jtzZizVr1a06wgIgiORbFbCxymcouliE0MlMxYZKB99FVp5kLfMOrKBwkRJqVHpm4BZq2I2dJLtylZpI6Og1dA",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "119804879422711",
+        "name": "Sun Swimming Bến Hẹn - Hồ Bơi - Dạy Bơi Quận 2 Quận 9",
+        "category": "Huấn luyện viên bơi lội",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/274698582_789564455780080_4159569817840275181_n.jpg?stp=cp0_dst-jpg_p50x50_tt6&_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=XPLCvQQlh0sQ7kNvwESX1d9&_nc_oc=AdrZP2v3AG3C3Jty4etHrqW1nkR7hekM9hnEWcvZxz-6ioHWW5lhTxq_m_9FAeqoGXORCcc6jCo6cs_OwiLgYHgn&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQL_uJwPsFnf_VdZY3vB40M4-W4YZPh96kW1Gaf6uNEBA4qo2w6VQqU23Lp027JvyytZ58mu0xy7Yw&oh=00_AQNT_e1WiFPCBWHxCUCpUgIHUUdFzrgseP3HBE1AJJFAuA&oe=6ACD3A3E",
+        "status": "connected",
+        "encryptedAccessToken": "kwtL6vB684GyGnqG.QIra8I419d7be6hpqnRpCg.lQAUAKyGirVzf8XiQB08QdtdLw577gR7GhD8roqkhJxAqVpXK09jZMQ0uMcAcoEFq8TOTbAPlf0hkSKufzt7LpGSq0DkiNziNDmVi9UxloJNRQ_pSP_ze-8gUMLCiQUZadp41WWf4fEipMVbB6TSvr5ntjlw_EMJyOqMQn-LbOqnnCDhFEiEC0z-o9PfTbsKyKrkbnvFnF_e1jIZMEi0cD9UV8dInEFPizNE5XdPk5L2gs0dfwwNahlT-4YPSWcQF91AgtnJ0W_P",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "858140771022791",
+        "name": "Garden Big Boss",
+        "category": "Thiết kế & Thời trang",
+        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/304102011_443526461129438_716916752330642702_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=87yrHAv0RmMQ7kNvwFqa-qa&_nc_oc=Adqd1_ahzH9E2-4fplLsfUcBSQGSBXznaoC52C2T4yM694GXVW0MeniJ8JHJAwIuiNUBdaWu_sFrkbOSUmfH4M9F&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQLSNFuTaxpwlN0mpcL2kn7jGeOKJ_4peOwgLqbLE_ezxNtrnmal9HlLmy3fWGrOH-uqJh_kmxc9tA&oh=00_AQP8RUbYvwZHv4dH7inJLbhDLqgJtLT7_tNTGQFYAO2FKQ&oe=6ACD22FD",
+        "status": "connected",
+        "encryptedAccessToken": "6lXm35J3qGv4FxIL.iElNxGo_ZdKtMxczwAVhRQ.XsGtaBo0GHEvN1DYOsITu3PKv4eGmO6pW2rHvBA66mAiM2c1bANNT4XPafx1hpaMicpCIpHYV51vIPT5K0mkdmltyNDWbPHKmVyH-NdKP0Q5iTm3Nhf7bTagmdA6pMBxHKkLAvgy7EVKbzNXwv7cV4-P8sw98vmac9B7vUb0MFMsla7a9lDaHe-muaI8wMTw16_7pYip-pNmYK0qe08-VQ6UjQO8AWCw9nOYeqJ1Q3xMt7yDTA66zPDIG4UlML6_1uU9cFUjkm3B",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "104142588189782",
+        "name": "BabyBoss",
+        "category": "Trang web thương mại điện tử",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/298726519_436659058480823_1998161816674076777_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=Hh_C_yxppP0Q7kNvwHN3LWF&_nc_oc=Adrd2lVKZ-PNNG6tygcd2OkH7uM7blcSXH12fgYL6ahdRjBmFQJrWKD44g60RuQwCf7wszWFTbU0Ki5Evf35GZlr&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQLN--l-R5J_GutdjnjKK3pLziiZT30UnN7bspKOUBWje3Hu72Xdt4sLUU290Xij2tC9AbQYc5_i2g&oh=00_AQMT1IvzEtuLs3p_mhVMxGcK5j43EI5z5Y1p8Pkj1xYqLA&oe=6ACD28C2",
+        "status": "connected",
+        "encryptedAccessToken": "Jb1APP71_hWtIqrz.T26ps1bSKZze0fejF4GxyA.cT974QVbU1JBqP_ofbAYfO7692qYKebQSCDGrLQWwUO8gSUQVj9YZDDqJUPjeBtLRDGNF6XNOlS6motNwubN40X7Oksz4qy8G-4or4cq1ErfEMAjIPwxcQiUY7PkS_xtdoNCEaHi9lCTjz_ErCU4bK2aJ_Ayrdy6TmuPnFBPa4G855u_zfdcuv7RWui1krsEGP3ji1jUA30s1Z3E_XKQo62yjOEmANhphk0iPsInsicBpK_NJs9W2DRdxDWmUEZsBx0ktPAwhdhwUwrRenSY",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "115371246534609",
+        "name": "Sun Swimming STown Thủ Đức",
+        "category": "Huấn luyện viên bơi lội",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/309385905_587102006541491_1759409664079821783_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=uvJ30EXgp1UQ7kNvwHTjIae&_nc_oc=AdqBg0wvXJ1w2fqLA-Kpui48I-iLXAxxGR6E1Z7lWw4DSXy6lPefija1Phy5Ks-IxIAxYqrtTfbW92sPyO_0RzMM&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQLfHVfkO7r4DGzjfR7DcOxbvg4d9XUkLdKZfBp67crog1caUVEnKNzw1He-XRy9jsxwmumS5zoMDg&oh=00_AQNJ_AVquo669-Xo71wsq9MScom_OrQ909hR9TrD5jBASg&oe=6ACD0FCD",
+        "status": "connected",
+        "encryptedAccessToken": "UQOwTizzDFJaK73U.gp6h8no_ciJ-DUy-c4Wfow.Rl_0wfEsaCzDCyYKewj8v5sOT5xdvkqpuMWIjJWBy8gZxkdg3oUKUBF4CWhtt6SEj-xVWGJ3YwFFlSw732SSBOFXPqRzXic38zYS9IaJu223RxVDPbYFJdM-98_xy9SqWbqCtv9fujUDsN4w5So1KwGPDtdIiYaHPQfPhQOXuKy1RMWMHDzO5qe2V0-NW1oPRCnehHM5TA6phAEzUs5FDzG_lCynaZ4D2GlcOUC_o1gHKBcqlwwQvuM93qaoUmq4dfWdgYy90GH-zGA",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "115297509875398",
+        "name": "Sun Swimming - Dạy Bơi Kèm Riêng Quận 7 - Since 2008",
+        "category": "Huấn luyện viên bơi lội",
+        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/294301313_754762128848609_4536261312445027565_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=KlchxUUr4tIQ7kNvwH-atBi&_nc_oc=AdrHGbY0uD1tmLczKTwMx-sS3iCFlqdsBlk8K7NIQxVQfCx9VH9D9iAOA_EflgYy2XeICl0CvBO_lZx_F30xYH7N&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQJbf_FaY13JFOWAopesbIYf7trfnk6o2hz5VwKwVoXsESnyNVcTc6nnyYLT5_5KUDq-KflqtTltmA&oh=00_AQP39AsickwPItxhaekUv9641SAP6Nw8x3D5YL_GEVtv7A&oe=6ACD2905",
+        "status": "connected",
+        "encryptedAccessToken": "jR4JGS2aurhN_BMN.sobuzx-pSilcKgt-r6ot7A.Tm69340fBGAZlOcymD1tqicdHBoFq3cbeiaypIGQYJ-6k1dt7x6NBuGDVvwwsNyw_33kfC8T_oIWxlk-G63JF3E1wyWeT3d5NCsBAnopQzfWKCgPXdCB_L_f9V82X2J04tua9ndU5Mpdqso_6M3W4zhu1H3pQ1cytAqfje5bTiSElyaOhrduaEuBUUz45_dQn4LQAnPSP1DuXPs49R_2u4XeXoGiUxfECGTylmbcctK-oK995qZHchqysP_TbPBKhoxcdnj9XVM",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "108796203913862",
+        "name": "Tố Như Droppii",
+        "category": "Podcast",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/681730764_1808972287088368_1424056409730748061_n.jpg?stp=c0.137.1529.1529a_cp0_dst-jpg_s50x50_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=iHl9XonWsm8Q7kNvwFNgg0q&_nc_oc=Adovqpxx7rc7QV-iOdQhWaW2CA2Rj0tR2eJLaq-aMOlfpLaqSgoqYTgcukecA71oSBy7q4585GLrT64zsxV0Df9A&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQK8X1f_tJAnowlcWiURE1NV-hf37wMgOn5UjDjz14lvveZioyJ5ZtX5EU-ULGKy36Ud5o6K_1En8g&oh=00_AQMW7sCJmX_i4GK3LG0m5bdPL8SgVMsNa7zZosY1rJ32iQ&oe=6ACD1771",
+        "status": "connected",
+        "encryptedAccessToken": "Vro6qUEesprmG_Hl.-vQjkpY-fuagOlYlbgPLAg.oYe-R3RiaJaLRnw-C47_nBplfqOw-4VLh0duhli-Lsht2vPy0VFV5oysUCLDf1pXeqhNJOc4PsqjjvXibLtK7a2Yk04sgbiSgKyVKVSG17v9XO2K3rAlxQl3UPJvL7bL1sujxRhVA5QucDTE1rGV3iaMUgYzSpysYZk8i3SO70E3OaRdlkD0bVA6aJWPCkXrHnNIVbEYI-9Gsj4uhoCMfnR-qjEuxRYzTFiui5pQ5ctVw03p2V9EyB1IIQLYUbmwiRlA-GszHgZqP2Dl",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "112551900156143",
+        "name": "Phụ Kiện Máy In 3D",
+        "category": "Phụ kiện",
+        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/359798891_587296170219584_2250465344491458675_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=x0vuoCf27TMQ7kNvwH6WAwl&_nc_oc=AdoYiUGoGIG3SebTSOW7zgoI3jIQw-iDzZQJWIYdr8KbNKAt4RMR3edt_DAzDixzHnVw5Gykp-sIX21dy4SFjlJM&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQJI9-BQqup7BPqQcD7IL_sRWS5aBqFKXX4DUWirsDHgtSNITA2IHSTgn4CCRBcJlKrzppBYK1zFeg&oh=00_AQM5duWPj0wWR0N7O-2bW_O9Vi6TyBz_pzEf57BNfOzMtg&oe=6ACD39DF",
+        "status": "connected",
+        "encryptedAccessToken": "TgT_8oH7Z5Gqn8El.Z9FGeqywDmluGGJ75o3C5Q.w5RsimyJqa_0I0sdBhHF927inKaDKW-a5NynPvaaBbTbzPD-YRMxJYhbeGiV5NA71o0U9kXuKOk8P4dYRbz574iHD2XX-A9iOs-4wzDVQgHyqtziN0u2Z3GIBdOOOgQCO4Wne88Ij3mQePRDuYCPHMzBj2tiMFapD4HtxFK0dyHpNR4soBGxuO78zaEY5M8ECXqYlZHds4HiIdy5prdvUz0DwrgsBT0Yjpg0Uutk3CTdfJPYLbz2jHWY-Egprc11rf-QAbREZbYgtdhprw",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "118721972866026",
+        "name": "Đồ Bảo Hộ",
+        "category": "Dụng cụ/Thiết bị",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/301142107_121257847337207_5304329789517127025_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=pwz2qo8VoeUQ7kNvwH6Ti0r&_nc_oc=AdrjCF6UMHb-cHTmIr5x01KvLPcY_9KeYtMkOWVSfesXzAjfTeDc_POu9T9oPDWLcwf2CrckzGj7Dv6jTyAP9ouj&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQKa8lq98Po5Sdz3C0fuE5sqrRYq92TobAGZC1-ghDEzdufmcH73iZIoNMKfl1p74IjAB9aPJoRZUQ&oh=00_AQOvB_Vf9knNDa3LZuPaBuf22n0tbHY89aaE4U7moIzvpw&oe=6ACD07FD",
+        "status": "connected",
+        "encryptedAccessToken": "lqqlXjPpyPfmjkre.kT0oa-APccc2I1rWyKhjFg.E8fgyG7lQdBxOsi8Fp5AJuJTsMkI-RqS8F--pIoZmrfXYSQrMUsU0zneag4gMbPn67mE5PmNggajZORQhycgxiEigg9AFian55WOim7Pa4P6APEj8QuPdluo5ctouCP1jJSh3xqLmqxzYEqyNchdsAmoOxJ2_WRTEhq-ohA3M1IQ69AP0RakNVY5cBtx1DfQrBnFEsb7juhGasPAM2pDMJ51SKT7Xwy2mzXc0jt7VjCKQ7hLQsFk41cnOMM7CCnO4dBBjbNMFxpg9po6pCG1",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "110063903733862",
+        "name": "Lều - Dù Che Nắng",
+        "category": "Dụng cụ/Thiết bị",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/300386117_402289608709202_1226308899155238220_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=108&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=75g1zzSORCoQ7kNvwGnYdbG&_nc_oc=Adpzm3Mtwu8mkGedX5bh-q50GTxCVGO1IZYpBcEQod_7e1S5s8L53XVp7ZfFAmt-jFfTejHtQQQgMgEc4bnSEs_R&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQLxIfU3wNqNGiWTyCduz6C4ye1CZqsJy2ada_ZIV93FoyAIysGfF2VS9Xeh0zd-AEW4sfwhMJVkGg&oh=00_AQP4lu5ijwqApWhsyL1fqr75qOgYb1Of_LixE-em_d6QCg&oe=6ACD02C0",
+        "status": "connected",
+        "encryptedAccessToken": "6WwhLzStWfNGaz5Q.4Xwk0vFO6tlug47AzMKIKg.H6UxeO5LPDgw_DOznfUxV3ScaKtrGJOewTqQAOu1HPGSU4W7dlIhEf1sfG9IsxI-czfkFdVRRY-a6BTbKjwg9iG4ZG2_gNe4Zvd12DdutYo45ph0CZ49c5-mKV8Tysx8vxkk_KfwN36X9XqR25GN3hD_sB9oAakfK-halaJ_KWX7fiuFOfi3CDf93HhL1QihXuzUDLNGs3qd89zJJMhLyfDI4WWP0f3w1701RtV4Fcrv88GL4cPQ7gtxNrd8W24LkoS58KN2QQ",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
         "id": "720906974785887",
         "name": "Đồ Chơi Chất",
         "category": "Sở thích",
-        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/326431996_582654360017026_275808128308730349_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=103&ccb=1-7&_nc_sid=f907e8&_nc_ohc=_TDjdln_zysQ7kNvwFhjruF&_nc_oc=Adql0ovx9I_4lH7ZznSQQzR_9CdNx66--EXrl5KBlpEbOsROY0mxNdlJ32uPnG6RIUgz1TwFvvwVw6u59RBlZfZK&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=bPKBFVrxeNj4Za0rNVinmg&_nc_tpa=Q5bMBQFa-8k5E0mtag0IkN9_irM7MeI9NbmK4vg3szoqQ4AEdtuybLpXQW520NgSLGKuJSy5AeRRASPcCg&oh=00_AQDwkt7TsC6X2er-d0EAalT9YbrhKn0fyyJojdQE2iu3BA&oe=6A5BA1E8",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/326431996_582654360017026_275808128308730349_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=sZCY-NWOMCUQ7kNvwFqfYEg&_nc_oc=AdpEEMexgm2KRrNDhAbN0XXU3C7sNunev5MPQ0q7UUTbgr1rVjF041_G8xIFG12AA_qTwoq_Qhbc2u5KmnYE3FD3&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQKmgiQGJUA3R4cbn8C2aWLoAuGEAnfm4aev2W2PHj3RVJOnLOdqR8j0YLMLd2Li2b6pfmQMB482IA&oh=00_AQPQsNz7hQENR47m965M8sOdwkdOMM6fbOV5NLwsApV6rQ&oe=6ACD02E8",
         "status": "connected",
-        "encryptedAccessToken": "3aGbPBuK3AuFX_nW.kXDpTN9axts8ESZUzuK9Gg.VlKZqCFfqudcM0jdumuRfgdb17R4bgAt63Rg_YrXKodHj_Lv6bfEzWZbm6ARvlqL3YsLgGHC8ava3y8Oevd63TL_SoP8ROQv90NpC1qDyLrdSTh86Hd11Yr2HCM5AAhjLPagij3opsB1Hw8AnS5UPcSAzl8kHTpOknyJ2I2DDCggKAqlKf-mbP-tjg0qCBW84OUXJJXvK-nW50phbw2WmTZAj_xc8_rt0bO67o20clYSNSPBsYikpVs794G3AIlfLZ9GTeD7IiuEAfR03R1uNx9f1sfPI8N1i8KmcWf4DdLFxw",
+        "encryptedAccessToken": "8xwWfS34HVbBrujl.8jv15WClcd9qtwr-wfn8hA.X0wbCq9eEeaFbb6s15WAFBk3OYQOeqifRvTDh4fG7KakcRmKhyCRUmorovwfFkwTpc_RQMUr75FpvD8oz1SouExx9WC-_DIGvv_WWxZGJuYjVD-dEfB7uyoJALymBhpZSB5xtKbooWogA3y1J94Iex1uTRKtPGhckdk6xVI0E6-zWFFuwZB6zoFGineKlGWID2kGDpenwY6t6mAPDTv6f08eSC3dm-zId7FsxSj0CWFqr6ixdvgInLzEk2jvdzaKDHnIJcph4xNxaB9q",
         "tasks": [
           "MODERATE",
           "MESSAGING",
           "ANALYZE",
           "ADVERTISE",
           "CREATE_CONTENT",
-          "MANAGE"
+          "MANAGE",
+          "MANAGE_LEADS"
         ],
-        "connectedAt": "2026-07-14T05:19:30.363Z"
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "441463326056616",
+        "name": "Cần Câu Cá Shimano",
+        "category": "Cửa hàng đồ câu cá",
+        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/299641360_203814841983029_8349426065268991887_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=Oano8VcdPdoQ7kNvwH8c9QQ&_nc_oc=AdqFCVrpbaVI08sDNR9BdzFeYKBrY2bYw5w8DQeRmEHQpwpDaVt3FMm9d9B99Fro8XA_SdgCXNtmwrRqAoLozkJl&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQKfq-R4_bpZkpmFeG57BGm2QeAiAH3LrVOEOpBM5Dfs4pNtul8D8V5C1C8B4Ls42bI4N41QXDFFuA&oh=00_AQOkaEyBp7KmE4zkEhnG8tqK9Ikw59LqLSrvTE1AzP_ktQ&oe=6ACD38AF",
+        "status": "connected",
+        "encryptedAccessToken": "RIiIPJXYTsKY4YrO.OsJmTVF1t5nbcpbluM-wwQ.v8YmQx2H6kJrqnoyRAwaRssYZaDXXw99QNTVCO5YfQUCmnp94XJ53AE2YSCqivRP5mCxca1k6mNNIlLNgcouZIkYU_zAJhJzCQAszokKsMurT52xS0S-6iHrWsm1U3fEcJygbgbv3m0nM9jJvHPlUiKWne5qOg_JfKr18RzYha1UP37dF7kVkdZ7ER__IXjGC7LOv0aXZ57TLe8S59LY3dlPhgt0E_RsDOtZtdecI6MuPrri_AZiJ3mMlm0m2cfkCkLcbx0W",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "1473213502985971",
+        "name": "Máy Câu Cá Shimano",
+        "category": "Sân vận động, sân thể thao và địa điểm thi đấu thể thao",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/300487533_359163969762126_56856816675741923_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=xUjxTMV4Gz8Q7kNvwGaaslS&_nc_oc=Adrs4FvUoLRNJyRjWKTZb05XsmBoUiJO1X2-L4EaVjP1jQFzdSliqFTcrRE5n_lSb-vD4PWMpjpvNd4W99xseOUG&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQII_XydYFmJV1CX-5ScWykFfUBkVndsOW9LvDXGh_WutY88GR-ERxp74thT2RaA6g0qdwRnC5DMKg&oh=00_AQMMxB0V2NQ5JZodMhei7wHGkesfseWynznqgVpjnDCmoA&oe=6ACD0D2D",
+        "status": "connected",
+        "encryptedAccessToken": "3fB0KqwJFj0dU9Jr.iRBqnKsmYogn6lfqeB8vQA.ni_nv_Kdws68jtBuJLCOSWg-_cWY6fpYlUBoymPrHIMFF2Xezk49Z2J-sz2-bGFIzLgdgGizKgOxzsCFj4L-I1tYBeXUPAnRKp8Vq0j2vfcEe8QcKDr_AzOtjSHiHb-02fWJaSeGcLgjtNlgU2rpmAD3vw-LpJM_4CYScf2Al2-Hh5GAWg3kfQMCt_6YeLY3dgf7ndz4y1r-x04VGNQu1WSe3eSkTo7_AaMu5JW-oBWW3CkoEH6XZSQwJ8oHQ3YPpfE18wLEBXk",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "517825858371982",
+        "name": "Cần Câu Máy",
+        "category": "Cửa hàng đồ câu cá",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/299899748_175745914981603_1894732399752389739_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=Odry301lMlwQ7kNvwF0ovZl&_nc_oc=AdqK3taEp-0Z2R7XLEzSktUssv3EgTT1oAdkzdkZn0MlF_Op2oX0H7CrhNAzG53dsxogIl7ZgMfBhkpLrGMzE_xf&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQJejb5hixOEdgVNf_dFX_aZnc_5aG-VVE2Ca8IvnsHFGKPq0vzqEbQmOsVdz8PVln3NZl3g140Kzw&oh=00_AQMDLoWXtrVILK4mQ0BOE9iNgvvQGHMoBIwo7HPkJSn_JA&oe=6ACD188C",
+        "status": "connected",
+        "encryptedAccessToken": "AUfsOtpEqrIKxBuF.f8a2xsaphsoBBCRf5wf5Rw.zWtbgVYxg62PxTY2RnOyvAS3kc87kIkLRthYRlpyqBqwQX78JAGTZMbcmTbBFrAdz4imZuZ7DWvzHrucU0d1apC5u_bR1zim8Ej7RkZTgikp_768igYu8_9n5byzWcSlVzYmT8SVsn4GFce4t6-prqqiEeQ140_sHVNP-AkZKR1lFrzN6mzNXPRcb8o6hSxK_IhusAcEevgcKUPvmVW7ShZF3N0VIu7BT5kXU8M2bNiJy4ykjWs36UbheD41x0Y3QdPq80l7",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "1055554567809903",
+        "name": "Câu Cá",
+        "category": "Cửa hàng đồ câu cá",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/304788997_393182232986658_9174389673533132988_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=7yfuaD_E0W4Q7kNvwGm9N07&_nc_oc=Ado1SjjgKIg4Y880PCsxhZ7C9TjAcjff8_KHyVjRLqC6RMsYEXcxyxmBaqhzwCM3qzMwGhYKq1muA7UWTj6tSZxe&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQKvybGQ_PvDkj0G7-WBOLyHyHWHFfZSDiUZLaWtqlMrEJkVoQoTF1G-WCHkG-B9cO26r9VGSNcx5A&oh=00_AQMbs2-p6QG3dN7eKhZoWB0M_Ve3ivDSg4AI4P0ORF8Rkw&oe=6ACD2B2B",
+        "status": "connected",
+        "encryptedAccessToken": "uAGSQjByQ4Le1uhw.IyYX5JUPNa0A4RUYhA44og.HLuYYnsxfVoCgSES4vVLKBoqJ8QLSFCzw1k8CDgCxQgZ0IRkSEkCWICtfGIiJGN706TaatkT7KJ8K18ZvCZuh9p7UmJ3977o4FW6lrZES8G2kwun6kriOg4VPyHCXE373hGv44xlSYSHxATfwBR6CkMnIGPcaEu6eTJi2U8UOyJno1hjOvTS8vJPv9vL5xnxle6Ru-iQIDsf2ztelRi_1ovXTZoNk_9taBCHwPaxzxEWqKE0Nd7y1anuaAn7DvPgHBDW5iuX",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "889086167842162",
+        "name": "T-KAP VIỆT NAM",
+        "category": "Nhà thiết kế",
+        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/616931418_1396916575460494_5637237794568578061_n.jpg?stp=c82.0.1884.1884a_cp0_dst-jpg_s50x50_tt6&_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=_XCuoqszNdoQ7kNvwHbsU6E&_nc_oc=AdrvGSuWYd9A3J-r7hUgKNlxL92tC9mULdx_7_OcVwTXund3wHwiUrb_iFSdj7n4sQBf8cq5UzjsnKb7tHtUHbvw&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQIrDVAaS7wX3Y-ZkAFAqcGZYwgviDn-_XJb_YBj55DsVUOeWnZ7NWh-k7ZB00FP_Y3s54T-6fj14Q&oh=00_AQMw5eWFwim0sHn7SOu9OMcv2COX7l2TF2Ydh9HPjLytgw&oe=6ACD3055",
+        "status": "connected",
+        "encryptedAccessToken": "5mxWAWxzLBot5I1l.3bNK53glR50tOpXhZYlhvg.S6sywLjqV2uuanEwpD1lzkZ1L6YndsNqp9J-OGgHRXY9qR6PpyrAN3NtCw5uKynty0RTgdwuW23ErYHk_8gp9ICcLYvPwA2K7EOPAqIGSU3quXqlhBw9DR4kr3DJPGKdHYNZBUU108teJz8hbcyz7xhl0TK4uDVMoWHwPtoREdHZnXqZsQBkGJAC6trWiE7uoLHgFO2a94doDoWvh0IA247WPWdURbL5X26Grq5qAk4HgFWek46daWLFqAFL655hjQtNECRvifrSjg",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "973266232683525",
+        "name": "ASun.vn",
+        "category": "Trò chơi/Đồ chơi",
+        "picture": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-1/326087347_936127524048119_7172116778675078307_n.png?stp=cp0_dst-png_s50x50&_nc_cat=109&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=4i1f1tqUc14Q7kNvwGr0h3L&_nc_oc=AdpEWW0kcWjHEJLyDhqU2iamLkbrxLjRlTwW95GR7M3o541xYTN1fhz-Qrsl8HmwLRyqCIU8aNS-Uo_liqPNvDSU&_nc_zt=24&_nc_ht=scontent.fsgn8-4.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQICt9bgt91Ph7bfI9VJK1ID7IkRTKIKtJnbwp3GWpyACf8IIHird0vidVzkm8ztyWcDgro8do7h8g&oh=00_AQMLKdgEzXKoUd2WsCijgA0okejuaKP2xgEiheN5yayLUA&oe=6ACD086C",
+        "status": "connected",
+        "encryptedAccessToken": "Cz-aQ8Xkb1R0GcHe.pfWVFMeqtncNTGiEfT8duA.JU0DM8J90rralDnlVuhfJSkidNZCH6m6PnTpiJvEcknyAx5fvF5D82PxPErj3HzIZNafRfHaDJ4eqnaK49fg1_YFNr7M0zhR-ab9aoFqzZO-7MKv8wLyuBHW0emkoVX-G0ZOHdBlEtQ9Q1bHd9Q4dmqn6Nn2Dweji_RdMccznyrgsCQNcoiGxTDqcOgM5FYVStWljEflNweqMoYVi3mKGPJfNnWdEzIQU2tOtdjuSKlg1a8g6uzMO72DwJsxGrVMVZscprL70Mqs",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
       },
       {
         "id": "1826362154251230",
-        "name": "Vua Ô Tô",
-        "category": "Ô tô, máy bay, tàu",
-        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/358697877_291425640060732_4212679822821282319_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=110&ccb=1-7&_nc_sid=f907e8&_nc_ohc=nF9HN2HnQx8Q7kNvwE5zZga&_nc_oc=AdpG1YksfDhLO1LzF3bDnvXcq1uzyK49M9zxqAbPrNEgu89WCofapBJV2jsQG0BOGI3pVqPp8b3tSNIO3WDzzmxv&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=bPKBFVrxeNj4Za0rNVinmg&_nc_tpa=Q5bMBQFZ4-xBk-nwuVvX4z6siqeeQSLC_S4I6xY5fi9qXnGgwefYCue3p0Fz9i2w8YZqa-FhWStqd8h-Ig&oh=00_AQCgh6Tr2eyTzqj3ixR-ghfoktM2csZgkftBUElNIrKTiQ&oe=6A5BAC76",
+        "name": "Yiquanda Water Purifier",
+        "category": "Cửa hàng đại lý",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/749355710_1049524537584168_1653855385021607503_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=mHNj9TTbBIgQ7kNvwHOpxja&_nc_oc=Ado2Ys8mse4bqjVBIOqTxQcau7TGmfBWRGhd9axzVNdhpJt0XAe1zBwTBKeE2ENKbo9kyxs5DuMEcnVcomXRBI1N&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQLTGA49crLTVdugV10iduD03zOI76mP3UyRS0U4JbLiMgixkicnuhu-xioOmBomNRmh6MRdyai8Hg&oh=00_AQNga5wBs4CAEMzB33q1W-9bP1P7Skz_xBzpmkOIt5U0tA&oe=6ACD32A0",
         "status": "connected",
-        "encryptedAccessToken": "1jBVWCr7UBEyzZzG.2nxo810QEfF053OH5_vFUg.SSMj7vF84ojYiSxON6svyv4GD159w4QuaTODkyW3eUNTnIaTXP1Nrq9TQd1dMSaCVEq-oJz4hdo068UVovdYvGuZGEahjar8G9e8I2DUMZh_UW-ODm9BeUJNINKPYAD9uQ5PbKq7x2bXQcbX9RKzPVGZLn1mSBkeegEnarFHysGQl7jBm5A-T6KDZLfklUtj2VKCigXBpXZWZg0KzQuLbbxan_PU3YtCOjXAK8-IhenXY14mPm13yB_OE36TjiwiPVUrBbvMyAgQTyM_zRog_Qwrifsf9Q3uPASM",
+        "encryptedAccessToken": "-K84BQUUXLeerX15.vL60U7Z4NxaqsNuJaRu4AA.tf69aGyK5n_W8bqgp6DU6cZgNUJ7EXh9-LsrOqb3pdDKqiq5TT-uz3hAWHxROif1xde8DmC0OmXiNzJIb4DeV0Oey7rJQNoZCsQV9QQprNMyaGMtGcZn-38Px_fQDA6zVaerLdS0viG_Ucb4wbWGqwSRt66thrNUhHxRrIn663NYv7z1o5EJ5g18njrO7gM3mxLA664ufiLTG1z4fgap1vM_GY3eYJkfE21cz8HKnFP0FlZVECC98uAr6cNf0yUdTOaZDt0Vw_3bbK0",
         "tasks": [
           "MODERATE",
           "MESSAGING",
           "ANALYZE",
           "ADVERTISE",
           "CREATE_CONTENT",
-          "MANAGE"
+          "MANAGE",
+          "MANAGE_LEADS"
         ],
-        "connectedAt": "2026-07-14T05:19:30.363Z"
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "1941837869190502",
+        "name": "Chiến Xa Thần Thú 2",
+        "category": "Đồ em bé/Đồ trẻ em",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/301699569_409756501246011_6487315272004719211_n.jpg?stp=cp0_dst-jpg_s50x50_tt6&_nc_cat=102&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=jlRDBFCX238Q7kNvwFvd0q2&_nc_oc=Adp8X2thkkqgcOV6iFOASZ49kR_mI7QUhNVRe7v1-sUCOVoe_aQkto6amAFw3J2nw_KtllCEVpC0peEX5b6FX5O7&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQK5F8LYFe_a3c0Er8Z2mA-C4t3OXVKaZZkVHzQvG2aJNa1TSnkzFjz4_DaXpevM3NrJCBJheoecVA&oh=00_AQP1J1d1m-E5Sty4Hg6gFortvBZdbWkh974OKXoMUCCC5Q&oe=6ACD37D1",
+        "status": "connected",
+        "encryptedAccessToken": "mregxl7VDrqfYR_3.N895rdwg0SJK4eKRd9dXsg.lZzlM36iJK49strt4yrz_oH8AMv-Ux9hXFSK5mYoE_wo4M7-IRcXSsA9S-mo3DMe7WiJpeWQKmh7eNvRJ0ybNX5_T3AfGqxn72eZnLKhTGoa47KRBtmCrzcK1cOcgmXhujcCJ6pQIC_fL6U03HUvafGwiPRr5h2cJOiP4iwTWslgybcisEhD3NuvLFgdHA3Y3PUkBqQuRlgv4YXe2VVSHlnXVodD08pbpOWcqReGG89HR5APzpm-YPDxT2PNElkHLvWeJ5QS",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
+      },
+      {
+        "id": "965741443519003",
+        "name": "Successmore Vn - Chăm Sóc Sức Khoẻ Sắc Đẹp Chủ Động",
+        "category": "Nghệ thuật",
+        "picture": "https://scontent.fsgn8-3.fna.fbcdn.net/v/t39.30808-1/742859077_1615783820552711_8375443853537875899_n.jpg?stp=cp1_dst-jpg_s50x50_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=f907e8&_nc_ohc=HGbIctpflwcQ7kNvwFBW3Ta&_nc_oc=AdpZUoPTUmeZB3RxzLEwGDDwp6C-EqeYqo8BvM4vlr-EFUuoTYE0_6IKVRjOJZecQYbLJ-NQfdnDvj0hO_yHte8f&_nc_zt=24&_nc_ht=scontent.fsgn8-3.fna&edm=AGaHXAAEAAAA&_nc_gid=33DM5hDaVIPlTm7N4cQ0ww&_nc_tpa=Q5bMBQI1VwUKePWEB3Ak55EJo2tcckfhoOlnjlhRrWA7VT6WPwpIkcwMRPPBDD-nbRpG7Rs1e35vdo4KCQ&oh=00_AQNs1ZvNBFgIT3oz3MrkssypzCEK2IaBdJ24ophJuMKx0Q&oe=6ACD2543",
+        "status": "connected",
+        "encryptedAccessToken": "Iysk1v21g-C6sf0F.36fq9W0SO0zTmf36djXsHg.xwEVXDN145YUwBZniS-VzQdOmTCjFUpPF54b3CSxJjO44NpkNE7fRmdYdv8m8Ce3_oDzN8wMm4jhIMIjkR51da97udQHQJYRQ-NoOjYuR1d6JfS1lUOJltLkjnX9C6ctQdGZfllwhVIAhw0eFewXNonQJqt-n_yreRzfEYGWXK0SO_N9MxVWby8Lx_kiJGE6LWPQ5nIcqeiCa9WUwBVtj2ktm-q-qyUYXW2yLqKND0r8_Lrwb9sczlTLpIkO7_lFEI0OhQ",
+        "tasks": [
+          "MODERATE",
+          "MESSAGING",
+          "ANALYZE",
+          "ADVERTISE",
+          "CREATE_CONTENT",
+          "MANAGE",
+          "MANAGE_LEADS"
+        ],
+        "connectedAt": "2026-10-08T07:51:29.147Z"
       }
     ],
-    "encryptedUserToken": "7p-toaY8Eo9WaXAH.v4P1SHq6uHf1cLP9XpKkOA.uaORUOKIL7t3s8VDp0RpinvpL_GTBi8I1KgZMMGAZfMyTekVv-5-BjhqjQKkXzR4EqFb2tvi2v2k85oXCx6EoU87AYSl14MIZ8ibwXuaII44HC2V6Q2Y8AGwPMmDRysDuKiLGa5_XWLWG1NnRUbiv2Quj1a1MQ26e9-zd547R8qvry0le1xl8nQ7_wlO-jETeWyL92pU4ZJ_ogW5avLekVjCO1M4A6vfzuGUiDhwZm2P4Hnaoamc1lxO3MUBrmn-GQi1kV3xgErMam2Q06384HyXh3u1",
-    "stateHash": "98feb2577e75c1f86a5ec71ac198cd694e1845405b4ab1e6772ac9b3eb05056c",
-    "stateExpiresAt": "2026-10-08T06:53:26.929Z"
+    "encryptedUserToken": "PFz4nyWuidCBFOII.M-9iBSSCnbPtcpQv3mnSPQ.ZX_0sKcZNZsekhIavr7hmnxGrZHGrzQ-NbrOlAHDk0kKBCc6ymjZLjdGwoxTJ-hU5dLKpBVSWJvRYWHroWOjZrd6XI4QN66iqkC-HQd9ht52x9Y6It4sy7-csQGXlsW5Z7tJuZ9hdV63onZ0dX1yynO-jeBvz9ttfpR4Mo6-d2SzE26Mv-sumIqmoA_srlmw2Mffg7P-Ez0zY3cPEdJ5_vF_QIXKjoK884lOp0yV-5jnSXEQBZJcNhi_8Mhp-T7vhClm"
   },
   "facebookManualPublishJobs": [
     {

@@ -6,6 +6,8 @@ import os from "os";
 import crypto from "crypto";
 import { execFile } from "child_process";
 import { promisify } from "util";
+import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { Firestore, getFirestore } from "firebase-admin/firestore";
 import { 
   ExtensionProductImportRequest, 
   ExtensionProductPending, 
@@ -21,6 +23,9 @@ const META_GRAPH_VERSION = process.env.META_GRAPH_VERSION?.trim() || "v25.0";
 const META_GRAPH_BASE = `https://graph.facebook.com/${META_GRAPH_VERSION}`;
 const APP_URL = process.env.APP_URL?.trim() || `http://localhost:${PORT}`;
 const FFMPEG_PATH = process.env.FFMPEG_PATH?.trim() || "ffmpeg";
+const FIREBASE_PROJECT_ID = process.env.FIREBASE_PROJECT_ID?.trim() || "";
+const FIREBASE_CLIENT_EMAIL = process.env.FIREBASE_CLIENT_EMAIL?.trim() || "";
+const FIREBASE_PRIVATE_KEY = (process.env.FIREBASE_PRIVATE_KEY || "").replace(/\\n/g, "\n").trim();
 const execFileAsync = promisify(execFile);
 
 interface StoredFacebookPage {
@@ -179,6 +184,54 @@ const writeDb = (data: VoltaraDb) => {
   } catch (err) {
     console.error("Error writing to JSON database:", err);
   }
+};
+
+const firebaseConfigReady = () => Boolean(
+  FIREBASE_PROJECT_ID && FIREBASE_CLIENT_EMAIL && FIREBASE_PRIVATE_KEY
+);
+
+let firestoreInstance: Firestore | null = null;
+const getFirebaseFirestore = (): Firestore | null => {
+  if (!firebaseConfigReady()) return null;
+  if (firestoreInstance) return firestoreInstance;
+
+  const firebaseApp = getApps()[0] || initializeApp({
+    credential: cert({
+      projectId: FIREBASE_PROJECT_ID,
+      clientEmail: FIREBASE_CLIENT_EMAIL,
+      privateKey: FIREBASE_PRIVATE_KEY
+    })
+  });
+  firestoreInstance = getFirestore(firebaseApp);
+  firestoreInstance.settings({ ignoreUndefinedProperties: true });
+  return firestoreInstance;
+};
+
+const readFacebookOAuthStore = async (): Promise<FacebookOAuthStore> => {
+  const firestore = getFirebaseFirestore();
+  if (!firestore) return readDb().facebookOAuth || { pages: [] };
+
+  const snapshot = await firestore.collection("voltara_app_state").doc("facebook_oauth").get();
+  if (!snapshot.exists) return { pages: [] };
+  const data = snapshot.data() as Partial<FacebookOAuthStore> | undefined;
+  return {
+    ...(data?.stateHash ? { stateHash: String(data.stateHash) } : {}),
+    ...(data?.stateExpiresAt ? { stateExpiresAt: String(data.stateExpiresAt) } : {}),
+    ...(data?.encryptedUserToken ? { encryptedUserToken: String(data.encryptedUserToken) } : {}),
+    pages: Array.isArray(data?.pages) ? data.pages as StoredFacebookPage[] : []
+  };
+};
+
+const writeFacebookOAuthStore = async (store: FacebookOAuthStore): Promise<void> => {
+  const firestore = getFirebaseFirestore();
+  if (!firestore) {
+    const db = readDb();
+    db.facebookOAuth = store;
+    writeDb(db);
+    return;
+  }
+
+  await firestore.collection("voltara_app_state").doc("facebook_oauth").set(store);
 };
 
 const facebookConfigReady = () => Boolean(
@@ -808,24 +861,30 @@ app.get("/api/facebook/config", (_req, res) => {
   res.json({
     configured: facebookConfigReady(),
     redirectUri: META_REDIRECT_URI,
-    graphVersion: META_GRAPH_VERSION
+    graphVersion: META_GRAPH_VERSION,
+    persistence: firebaseConfigReady() ? "firestore" : "file"
   });
 });
 
-app.get("/api/facebook/pages", (_req, res) => {
-  const db = readDb();
-  const pages = (db.facebookOAuth?.pages || []).map(page => ({
-    id: page.id,
-    name: page.name,
-    category: page.category,
-    picture: page.picture,
-    status: page.status,
-    tasks: page.tasks || []
-  }));
-  res.json({ success: true, pages });
+app.get("/api/facebook/pages", async (_req, res) => {
+  try {
+    const store = await readFacebookOAuthStore();
+    const pages = store.pages.map(page => ({
+      id: page.id,
+      name: page.name,
+      category: page.category,
+      picture: page.picture,
+      status: page.status,
+      tasks: page.tasks || []
+    }));
+    res.json({ success: true, pages });
+  } catch (error: any) {
+    console.error("Facebook pages storage error:", error?.message || error);
+    res.status(500).json({ success: false, error: "Không đọc được danh sách Fanpage từ Firestore." });
+  }
 });
 
-app.get("/api/facebook/oauth/start", (_req, res) => {
+app.get("/api/facebook/oauth/start", async (_req, res) => {
   if (!facebookConfigReady()) {
     return res.status(500).json({
       success: false,
@@ -834,18 +893,28 @@ app.get("/api/facebook/oauth/start", (_req, res) => {
   }
 
   const state = crypto.randomBytes(32).toString("base64url");
-  const db = readDb();
-  db.facebookOAuth = db.facebookOAuth || { pages: [] };
-  db.facebookOAuth.stateHash = crypto.createHash("sha256").update(state).digest("hex");
-  db.facebookOAuth.stateExpiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-  writeDb(db);
+  try {
+    const store = await readFacebookOAuthStore();
+    store.stateHash = crypto.createHash("sha256").update(state).digest("hex");
+    store.stateExpiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    await writeFacebookOAuthStore(store);
+  } catch (error: any) {
+    console.error("Facebook OAuth state storage error:", error?.message || error);
+    return res.status(500).json({ success: false, error: "Không lưu được phiên đăng nhập Facebook vào Firestore." });
+  }
 
   const authParams = new URLSearchParams({
     client_id: META_APP_ID,
     redirect_uri: META_REDIRECT_URI,
     state,
     response_type: "code",
-    scope: "pages_show_list,pages_read_engagement,pages_manage_posts"
+    scope: [
+      "pages_show_list",
+      "pages_read_engagement",
+      "pages_manage_posts",
+      "pages_messaging",
+      "pages_manage_metadata"
+    ].join(",")
   });
 
   res.json({
@@ -890,9 +959,9 @@ app.get("/api/facebook/oauth/callback", async (req, res) => {
 
     const code = typeof req.query.code === "string" ? req.query.code : "";
     const state = typeof req.query.state === "string" ? req.query.state : "";
-    const db = readDb();
-    const savedHash = db.facebookOAuth?.stateHash || "";
-    const expiresAt = Date.parse(db.facebookOAuth?.stateExpiresAt || "");
+    const oauthStore = await readFacebookOAuthStore();
+    const savedHash = oauthStore.stateHash || "";
+    const expiresAt = Date.parse(oauthStore.stateExpiresAt || "");
     const receivedHash = crypto.createHash("sha256").update(state).digest("hex");
 
     if (!code || !state || !savedHash || receivedHash !== savedHash || !expiresAt || expiresAt < Date.now()) {
@@ -936,11 +1005,10 @@ app.get("/api/facebook/oauth/callback", async (req, res) => {
         connectedAt
       }));
 
-    db.facebookOAuth = {
+    await writeFacebookOAuthStore({
       pages,
       encryptedUserToken: encryptFacebookToken(userToken)
-    };
-    writeDb(db);
+    });
 
     if (pages.length === 0) {
       sendResultPage(false, "Facebook đăng nhập thành công nhưng không trả về Fanpage nào có quyền quản lý.");
@@ -953,20 +1021,77 @@ app.get("/api/facebook/oauth/callback", async (req, res) => {
   }
 });
 
-app.delete("/api/facebook/pages/:id", (req, res) => {
-  const db = readDb();
-  const pages = db.facebookOAuth?.pages || [];
-  const page = pages.find(item => item.id === req.params.id);
-  if (!page) {
-    return res.status(404).json({ success: false, error: "Không tìm thấy Fanpage đã kết nối." });
+app.delete("/api/facebook/pages/:id", async (req, res) => {
+  try {
+    const store = await readFacebookOAuthStore();
+    const page = store.pages.find(item => item.id === req.params.id);
+    if (!page) {
+      return res.status(404).json({ success: false, error: "Không tìm thấy Fanpage đã kết nối." });
+    }
+    page.status = "disconnected";
+    page.encryptedAccessToken = undefined;
+    await writeFacebookOAuthStore(store);
+    res.json({ success: true });
+  } catch (error: any) {
+    console.error("Facebook disconnect storage error:", error?.message || error);
+    res.status(500).json({ success: false, error: "Không cập nhật được Fanpage trong Firestore." });
   }
-  page.status = "disconnected";
-  page.encryptedAccessToken = undefined;
-  writeDb(db);
-  res.json({ success: true });
 });
 
 const downloadFacebookMedia = async (urlValue: string, kind: "image" | "video") => {
+  const maximumSize = kind === "video" ? 250 * 1024 * 1024 : 25 * 1024 * 1024;
+  const buildDownloadResult = (bytes: Buffer, contentType: string) => {
+    if (bytes.byteLength > maximumSize) {
+      throw new Error(`${kind === "video" ? "Video" : "Hình ảnh"} vượt quá giới hạn tải tạm của Hub.`);
+    }
+    const binary = kind === "video" ? bytes : null;
+    return {
+      blob: new Blob([bytes], { type: contentType }),
+      bytes,
+      contentType,
+      hasVideoTrack: binary ? binary.includes(Buffer.from("vide")) : false,
+      hasAudioTrack: binary ? binary.includes(Buffer.from("soun")) : false
+    };
+  };
+
+  // Media uploaded from the local composer is intentionally stored with a
+  // host-agnostic URL. Read only a validated file inside FACEBOOK_MEDIA_DIR
+  // instead of trying to parse that relative URL as an internet address.
+  const localMatch = urlValue.match(/^\/api\/facebook\/media\/([a-zA-Z0-9_-]+\.(?:mp4|webm|mov|jpg|jpeg|png|webp|gif))$/i);
+  if (localMatch) {
+    const filename = localMatch[1];
+    const mediaPath = path.resolve(FACEBOOK_MEDIA_DIR, filename);
+    const mediaRoot = `${path.resolve(FACEBOOK_MEDIA_DIR)}${path.sep}`;
+    if (!mediaPath.startsWith(mediaRoot)) {
+      throw new Error("Đường dẫn media nội bộ không hợp lệ.");
+    }
+    let stats: fs.Stats;
+    try {
+      stats = await fs.promises.stat(mediaPath);
+    } catch {
+      throw new Error("Media đã tải lên không còn tồn tại trên máy chủ.");
+    }
+    if (!stats.isFile()) {
+      throw new Error("Đường dẫn media nội bộ không trỏ tới tệp hợp lệ.");
+    }
+    if (stats.size > maximumSize) {
+      throw new Error(`${kind === "video" ? "Video" : "Hình ảnh"} vượt quá giới hạn tải tạm của Hub.`);
+    }
+    const contentTypes: Record<string, string> = {
+      ".mp4": "video/mp4",
+      ".webm": "video/webm",
+      ".mov": "video/quicktime",
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".png": "image/png",
+      ".webp": "image/webp",
+      ".gif": "image/gif"
+    };
+    const contentType = contentTypes[path.extname(filename).toLowerCase()]
+      || (kind === "video" ? "video/mp4" : "image/jpeg");
+    return buildDownloadResult(await fs.promises.readFile(mediaPath), contentType);
+  }
+
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(urlValue);
@@ -988,7 +1113,6 @@ const downloadFacebookMedia = async (urlValue: string, kind: "image" | "video") 
     throw new Error(`Không tải được ${kind === "video" ? "video" : "hình ảnh"} nguồn (HTTP ${response.status}). Link có thể đã hết hạn.`);
   }
 
-  const maximumSize = kind === "video" ? 250 * 1024 * 1024 : 25 * 1024 * 1024;
   const announcedSize = Number(response.headers.get("content-length") || 0);
   if (announcedSize > maximumSize) {
     throw new Error(`${kind === "video" ? "Video" : "Hình ảnh"} vượt quá giới hạn tải tạm của Hub.`);
@@ -998,16 +1122,7 @@ const downloadFacebookMedia = async (urlValue: string, kind: "image" | "video") 
     throw new Error(`${kind === "video" ? "Video" : "Hình ảnh"} vượt quá giới hạn tải tạm của Hub.`);
   }
   const contentType = response.headers.get("content-type") || (kind === "video" ? "video/mp4" : "image/jpeg");
-  const binary = kind === "video" ? Buffer.from(bytes) : null;
-  const hasVideoTrack = binary ? binary.includes(Buffer.from("vide")) : false;
-  const hasAudioTrack = binary ? binary.includes(Buffer.from("soun")) : false;
-  return {
-    blob: new Blob([bytes], { type: contentType }),
-    bytes: Buffer.from(bytes),
-    contentType,
-    hasVideoTrack,
-    hasAudioTrack
-  };
+  return buildDownloadResult(Buffer.from(bytes), contentType);
 };
 
 const muxFacebookDashVideo = async (videoUrl: string, audioUrl: string) => {
@@ -1156,8 +1271,13 @@ app.post("/api/facebook/publish", async (req, res) => {
     return res.status(400).json({ success: false, error: "Bài đăng phải có nội dung, hình ảnh hoặc video." });
   }
 
-  const db = readDb();
-  const storedPages = db.facebookOAuth?.pages || [];
+  let storedPages: StoredFacebookPage[];
+  try {
+    storedPages = (await readFacebookOAuthStore()).pages;
+  } catch (error: any) {
+    console.error("Facebook publish storage error:", error?.message || error);
+    return res.status(500).json({ success: false, error: "Không đọc được Page Token từ Firestore." });
+  }
   const results: any[] = [];
 
   for (const pageId of pageIds) {

@@ -19,6 +19,7 @@ import { FacebookPostEditorPage } from './pages/FacebookPostEditorPage';
 import { FacebookPagesPage } from './pages/FacebookPagesPage';
 import { FacebookLogsPage } from './pages/FacebookLogsPage';
 import { FacebookSchedulePage } from './pages/FacebookSchedulePage';
+import { FacebookQuickPublishPage } from './pages/FacebookQuickPublishPage';
 import { FacebookPost } from './types/facebookTypes';
 
 
@@ -75,7 +76,7 @@ const sanitizeImportedDescription = (value?: string): string => {
 import { 
   LayoutDashboard, Package, PlusCircle, Tags, CloudLightning, 
   RefreshCcw, Settings, Menu, X, Bolt, Clock, Activity, AlertTriangle,
-  ShoppingBag, Facebook, FileText, Globe
+  ShoppingBag, Facebook, FileText, Globe, Send
 } from 'lucide-react';
 
 export default function App() {
@@ -419,6 +420,7 @@ export default function App() {
   const facebookMenuItems = [
     { id: 'fb-posts', label: 'Bài viết đã copy', icon: <FileText className="w-5 h-5" /> },
     { id: 'fb-pages', label: 'Fanpage đã kết nối', icon: <Globe className="w-5 h-5" /> },
+    { id: 'fb-quick-publish', label: 'Đăng nhanh', icon: <Send className="w-5 h-5" /> },
     { id: 'fb-schedule', label: 'Lịch đăng', icon: <Clock className="w-5 h-5" /> },
     { id: 'fb-logs', label: 'Nhật ký đăng', icon: <Activity className="w-5 h-5" /> },
   ];
@@ -511,6 +513,8 @@ export default function App() {
         );
       case 'fb-pages':
         return <FacebookPagesPage addToast={addToast} />;
+      case 'fb-quick-publish':
+        return <FacebookQuickPublishPage addToast={addToast} />;
       case 'fb-schedule':
         return (
           <FacebookSchedulePage
