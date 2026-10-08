@@ -20,6 +20,7 @@ import { FacebookPagesPage } from './pages/FacebookPagesPage';
 import { FacebookLogsPage } from './pages/FacebookLogsPage';
 import { FacebookSchedulePage } from './pages/FacebookSchedulePage';
 import { FacebookQuickPublishPage } from './pages/FacebookQuickPublishPage';
+import { LegalPage, LegalPageKind } from './pages/LegalPages';
 import { FacebookPost } from './types/facebookTypes';
 
 
@@ -79,7 +80,7 @@ import {
   ShoppingBag, Facebook, FileText, Globe, Send
 } from 'lucide-react';
 
-export default function App() {
+function ProductHubApp() {
   // --- CORE APP STATES ---
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -768,4 +769,14 @@ export default function App() {
       />
     </div>
   );
+}
+
+export default function App() {
+  const legalRoutes: Record<string, LegalPageKind> = {
+    '/privacy': 'privacy',
+    '/terms': 'terms',
+    '/data-deletion': 'data-deletion'
+  };
+  const legalPage = legalRoutes[window.location.pathname.replace(/\/$/, '') || '/'];
+  return legalPage ? <LegalPage kind={legalPage} /> : <ProductHubApp />;
 }
